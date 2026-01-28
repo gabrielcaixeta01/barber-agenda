@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sistema de Agendamento para Barbearia
 
-## Getting Started
+Aplicação web para gerenciamento de agendamentos em barbearias, com foco em simplicidade para o cliente e controle centralizado pelo administrador.
 
-First, run the development server:
+O sistema permite que clientes realizem agendamentos sem criar conta. O pagamento é feito presencialmente na barbearia.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Visão Geral
+
+O projeto é dividido em duas áreas principais:
+
+- **Área pública**: destinada aos clientes para realização de agendamentos.
+- **Área administrativa**: destinada à gestão interna da barbearia.
+
+A aplicação utiliza uma arquitetura moderna, com validações server-side, controle de acesso e integração com banco de dados relacional.
+
+---
+
+## Funcionalidades
+
+### Cliente
+- Agendamento sem autenticação
+- Seleção de serviço
+- Seleção de data e horário disponíveis
+- Opção de escolher um barbeiro específico ou deixar a escolha em aberto
+- Confirmação do agendamento via WhatsApp
+- Cancelamento e reagendamento de horários
+
+### Administrador
+- Login seguro via Supabase Auth
+- Acesso restrito às rotas administrativas
+- Cadastro e gerenciamento de barbeiros
+- Definição manual dos horários de trabalho
+- Visualização da agenda diária e semanal
+- Edição e cancelamento de agendamentos
+- Relatórios simples de atendimentos
+
+---
+
+## Tecnologias Utilizadas
+
+- Next.js (App Router)
+- React
+- TypeScript
+- Tailwind CSS
+- Supabase (PostgreSQL, Auth, Row Level Security)
+- Integração com WhatsApp via deep links
+
+---
+
+## Estrutura do Projeto
+
+```
+src/
+├─ app/
+│  ├─ admin/
+│  │  ├─ login/
+│  │  ├─ layout.tsx
+│  │  └─ page.tsx
+│  ├─ agendar/
+│  ├─ api/
+│  └─ layout.tsx
+├─ components/
+│  ├─ booking/
+│  └─ layout/
+├─ lib/
+│  ├─ supabase/
+│  └─ data/
+├─ types/
+└─ middleware.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Banco de Dados
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Principais tabelas utilizadas:
 
-## Learn More
+- `admins`
+- `barbers`
+- `services`
+- `barber_schedules`
+- `appointments`
 
-To learn more about Next.js, take a look at the following resources:
+A autenticação é gerenciada pelo Supabase Auth. A tabela `admins` referencia usuários autenticados autorizados a acessar o painel administrativo.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Controle de Acesso
 
-## Deploy on Vercel
+- Rotas administrativas protegidas por middleware
+- Row Level Security (RLS) configurado no Supabase
+- Criação de agendamentos permitida sem autenticação
+- Operações administrativas restritas a usuários autorizados
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Configuração do Ambiente
+
+Criar um arquivo `.env.local` na raiz do projeto com as seguintes variáveis:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
+
+---
+
+## Observações
+
+Este projeto foi desenvolvido com foco em um MVP funcional, priorizando clareza de código, facilidade de manutenção e possibilidade de evolução futura.
