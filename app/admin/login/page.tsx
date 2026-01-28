@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { loginAdmin } from "@/app/admin/action";
+import { loginAdmin } from "@/app/admin/actions";
 
 export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);

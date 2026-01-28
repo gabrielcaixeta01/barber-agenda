@@ -3,10 +3,31 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect, useMemo, useState } from "react";
+import { logoutAdmin } from "@/app/admin/actions";
+import {
+  Calendar,
+  Clock,
+  ClipboardList,
+  Grid2X2,
+  Home,
+  LogOut,
+  Menu,
+  Scissors,
+  Tag,
+  User,
+  X,
+} from "lucide-react";
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
+
+type NavItem = {
+  href: string;
+  label: string;
+  show: boolean;
+  Icon: React.ComponentType<{ size?: number; className?: string }>;
+};
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -15,21 +36,21 @@ export default function Navbar() {
   const isAdminArea = pathname.startsWith("/admin");
   const isAdminLogin = pathname === "/admin/login";
 
-  const navItems = useMemo(
+  const navItems: NavItem[] = useMemo(
     () => [
-      { href: "/", label: "Início", show: !isAdminArea },
-      { href: "/agendar", label: "Agendar", show: !isAdminArea },
+      { href: "/", label: "Início", show: !isAdminArea, Icon: Home },
+      { href: "/agendar", label: "Agendar", show: !isAdminArea, Icon: Calendar },
     ],
     [isAdminArea]
   );
 
-  const adminItems = useMemo(
+  const adminItems: NavItem[] = useMemo(
     () => [
-      { href: "/admin", label: "Dashboard", show: isAdminArea },
-      { href: "/admin/barbeiros", label: "Barbeiros", show: isAdminArea },
-      { href: "/admin/horarios", label: "Horários", show: isAdminArea },
-      { href: "/admin/servicos", label: "Serviços", show: isAdminArea },
-        { href: "/admin/agendamentos", label: "Agendamentos", show: isAdminArea },
+      { href: "/admin", label: "Dashboard", show: isAdminArea, Icon: Grid2X2 },
+      { href: "/admin/agendamentos", label: "Agendamentos", show: isAdminArea, Icon: ClipboardList },
+      { href: "/admin/barbeiros", label: "Barbeiros", show: isAdminArea, Icon: Scissors },
+      { href: "/admin/horarios", label: "Horários", show: isAdminArea, Icon: Clock },
+      { href: "/admin/servicos", label: "Serviços", show: isAdminArea, Icon: Tag },
     ],
     [isAdminArea]
   );
@@ -38,18 +59,15 @@ export default function Navbar() {
     ? adminItems.filter((i) => i.show)
     : navItems.filter((i) => i.show);
 
-  // Fecha menu ao navegar
-  useLayoutEffect(() => { 
+  useLayoutEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
   }, [pathname]);
 
-  // Não renderiza navbar na tela de login admin
   if (isAdminLogin) return null;
 
   return (
     <header className="sticky top-0 z-50">
-      {/* Camada premium */}
       <div className="border-b border-black/10 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           {/* Brand */}
@@ -87,12 +105,16 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={cx(
-                    "rounded-lg px-3 py-2 text-sm transition",
+                    "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition",
                     active
                       ? "bg-black text-white"
                       : "text-black/70 hover:bg-black/5 hover:text-black"
                   )}
                 >
+                  <item.Icon
+                    size={16}
+                    className={cx(active ? "text-white" : "text-black/60")}
+                  />
                   {item.label}
                 </Link>
               );
@@ -102,14 +124,40 @@ export default function Navbar() {
           {/* Actions */}
           <div className="flex items-center gap-2">
             {!isAdminArea && (
-              <>
+              <Link
+                href="/admin/login"
+                className="hidden items-center gap-2 rounded-lg border border-black/10 px-3 py-2 text-sm text-black/70 transition hover:border-black/30 hover:text-black md:inline-flex"
+              >
+                <User size={16} className="text-black/60" />
+                Admin
+              </Link>
+            )}
+
+            {isAdminArea && (
+              <div className="hidden items-center gap-2 md:flex">
                 <Link
-                  href="/admin/login"
-                  className="hidden rounded-lg border border-black/10 px-3 py-2 text-sm text-black/70 transition hover:border-black/30 hover:text-black md:inline-flex"
+                  href="/admin/perfil"
+                  className={cx(
+                    "inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition",
+                    pathname.startsWith("/admin/perfil")
+                      ? "border-black bg-black text-white"
+                      : "border-black/10 text-black/70 hover:border-black/30"
+                  )}
                 >
-                  Admin
+                  <User size={16} className={cx(pathname.startsWith("/admin/perfil") ? "text-white" : "text-black/60")} />
+                  Perfil
                 </Link>
-              </>
+
+                <form action={logoutAdmin}>
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-2 rounded-lg border border-black/10 px-3 py-2 text-sm text-red-600 transition hover:border-red-600/40"
+                  >
+                    <LogOut size={16} className="text-red-600" />
+                    Sair
+                  </button>
+                </form>
+              </div>
             )}
 
             {/* Mobile toggle */}
@@ -120,18 +168,13 @@ export default function Navbar() {
               aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
               aria-expanded={mobileOpen}
             >
-              {mobileOpen ? <XIcon /> : <MenuIcon />}
+              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
 
         {/* Mobile menu */}
-        <div
-          className={cx(
-            "md:hidden",
-            mobileOpen ? "block" : "hidden"
-          )}
-        >
+        <div className={cx("md:hidden", mobileOpen ? "block" : "hidden")}>
           <div className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
             <div className="rounded-2xl border border-black/10 bg-white p-2 shadow-sm">
               <div className="flex flex-col">
@@ -146,12 +189,16 @@ export default function Navbar() {
                       key={item.href}
                       href={item.href}
                       className={cx(
-                        "rounded-xl px-3 py-3 text-sm transition",
+                        "flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition",
                         active
                           ? "bg-black text-white"
                           : "text-black/70 hover:bg-black/5 hover:text-black"
                       )}
                     >
+                      <item.Icon
+                        size={16}
+                        className={cx(active ? "text-white" : "text-black/60")}
+                      />
                       {item.label}
                     </Link>
                   );
@@ -161,16 +208,39 @@ export default function Navbar() {
                   <div className="mt-2 grid gap-2 border-t border-black/10 pt-2">
                     <Link
                       href="/agendar"
-                      className="rounded-xl bg-black px-3 py-3 text-center text-sm font-medium text-white transition hover:opacity-90"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-black px-3 py-3 text-center text-sm font-medium text-white transition hover:opacity-90"
                     >
+                      <Calendar size={16} className="text-white" />
                       Agendar
                     </Link>
                     <Link
                       href="/admin/login"
-                      className="rounded-xl border border-black/10 px-3 py-3 text-center text-sm text-black/70 transition hover:border-black/30 hover:text-black"
+                      className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-3 py-3 text-center text-sm text-black/70 transition hover:border-black/30 hover:text-black"
                     >
+                      <User size={16} className="text-black/60" />
                       Admin
                     </Link>
+                  </div>
+                )}
+
+                {isAdminArea && (
+                  <div className="mt-2 grid gap-2 border-t border-black/10 pt-2">
+                    <Link
+                      href="/admin/perfil"
+                      className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-3 py-3 text-center text-sm text-black/70 transition hover:border-black/30 hover:text-black"
+                    >
+                      <User size={16} className="text-black/60" />
+                      Perfil
+                    </Link>
+                    <form action={logoutAdmin}>
+                      <button
+                        type="submit"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500/10 px-3 py-3 text-center text-sm text-red-600 transition hover:bg-red-500/20"
+                      >
+                        <LogOut size={16} className="text-red-600" />
+                        Sair
+                      </button>
+                    </form>
                   </div>
                 )}
               </div>
@@ -179,34 +249,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Linha sutil (premium) */}
       <div className="pointer-events-none h-px w-full bg-linear-to-r from-transparent via-black/10 to-transparent" />
     </header>
-  );
-}
-
-function MenuIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M4 7h16M4 12h16M4 17h16"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M6 6l12 12M18 6L6 18"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
   );
 }

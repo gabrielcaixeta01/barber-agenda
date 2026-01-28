@@ -24,5 +24,5 @@ export async function loginAdmin(formData: FormData) {
 export async function logoutAdmin() {
   const supabase = await createSupabaseServer();
   await supabase.auth.signOut();
-  redirect("/admin/login");
+  redirect("/");
 }
