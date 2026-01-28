@@ -18,7 +18,7 @@ export async function loginAdmin(formData: FormData) {
     return { error: "E-mail ou senha inválidos" };
   }
 
-  redirect("/admin");
+  redirect("/admin/dashboard");
 }
 
 export async function logoutAdmin() {

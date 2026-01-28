@@ -46,7 +46,7 @@ export default function Navbar() {
 
   const adminItems: NavItem[] = useMemo(
     () => [
-      { href: "/admin", label: "Dashboard", show: isAdminArea, Icon: Grid2X2 },
+      { href: "/admin/dashboard", label: "Dashboard", show: isAdminArea, Icon: Grid2X2 },
       { href: "/admin/agendamentos", label: "Agendamentos", show: isAdminArea, Icon: ClipboardList },
       { href: "/admin/barbeiros", label: "Barbeiros", show: isAdminArea, Icon: Scissors },
       { href: "/admin/horarios", label: "Horários", show: isAdminArea, Icon: Clock },
@@ -73,7 +73,7 @@ export default function Navbar() {
           {/* Brand */}
           <div className="flex items-center gap-3">
             <Link
-              href={isAdminArea ? "/admin" : "/"}
+              href="/"
               className="group inline-flex items-center gap-2"
               aria-label="Home"
             >
