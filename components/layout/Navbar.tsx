@@ -29,6 +29,7 @@ export default function Navbar() {
       { href: "/admin/barbeiros", label: "Barbeiros", show: isAdminArea },
       { href: "/admin/horarios", label: "Horários", show: isAdminArea },
       { href: "/admin/servicos", label: "Serviços", show: isAdminArea },
+        { href: "/admin/agendamentos", label: "Agendamentos", show: isAdminArea },
     ],
     [isAdminArea]
   );

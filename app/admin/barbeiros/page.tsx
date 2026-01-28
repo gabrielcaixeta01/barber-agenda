@@ -1,6 +1,10 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { CreateBarberForm, BarberActionButtons } from "./BarberForm";
-import { setBarberActive } from "./actions";
+import {
+  createBarber,
+  updateBarber,
+  setBarberActive,
+  deleteBarber,
+} from "./actions";
 
 type BarberRow = {
   id: string;
@@ -44,7 +48,18 @@ export default async function AdminBarbersPage() {
       {/* Create */}
       <section className="rounded-2xl border border-black/10 bg-white p-6">
         <h2 className="text-lg font-medium">Adicionar barbeiro</h2>
-        <CreateBarberForm />
+
+        <form action={createBarber} className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <input
+            name="name"
+            placeholder="Nome do barbeiro"
+            required
+            className="h-11 flex-1 rounded-xl border border-black/10 px-4"
+          />
+          <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90">
+            Criar
+          </button>
+        </form>
       </section>
 
       {/* List */}
@@ -84,28 +99,58 @@ export default async function AdminBarbersPage() {
                     </div>
                   </div>
 
-                                    <div className="flex flex-wrap gap-2">
-                                      {/* Toggle active */}
-                                      <form action={async (formData) => {
-                                        await setBarberActive(formData);
-                                      }}>
-                                        <input type="hidden" name="id" value={b.id} />
-                                        <input type="hidden" name="active" value={String(!b.active)} />
-                                        <button
-                                          className="rounded-xl border border-black/10 px-4 py-2 text-sm transition hover:border-black/30"
-                                          type="submit"
-                                        >
-                                          {b.active ? "Desativar" : "Ativar"}
-                                        </button>
-                                      </form>
-                                      <BarberActionButtons id={b.id} name={b.name} active={b.active} />
-                                    </div>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </section>
+                  <div className="flex flex-wrap gap-2">
+                    {/* Toggle active */}
+                    <form action={setBarberActive}>
+                      <input type="hidden" name="id" value={b.id} />
+                      <input type="hidden" name="active" value={String(!b.active)} />
+                      <button
+                        className="rounded-xl border border-black/10 px-4 py-2 text-sm transition hover:border-black/30"
+                        type="submit"
+                      >
+                        {b.active ? "Desativar" : "Ativar"}
+                      </button>
+                    </form>
+
+                    {/* Edit inline */}
+                    <details className="group">
+                      <summary className="cursor-pointer list-none rounded-xl border border-black/10 px-4 py-2 text-sm transition hover:border-black/30">
+                        Editar
+                      </summary>
+
+                      <div className="mt-2 rounded-2xl border border-black/10 bg-white p-4">
+                        <form action={updateBarber} className="flex flex-col gap-3 sm:flex-row">
+                          <input type="hidden" name="id" value={b.id} />
+                          <input
+                            name="name"
+                            defaultValue={b.name}
+                            required
+                            className="h-11 flex-1 rounded-xl border border-black/10 px-4"
+                          />
+                          <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90">
+                            Salvar
+                          </button>
+                        </form>
                       </div>
-                    );
-                  }
+                    </details>
+
+                    {/* Delete */}
+                    <form action={deleteBarber}>
+                      <input type="hidden" name="id" value={b.id} />
+                      <button
+                        className="rounded-xl border border-black/10 px-4 py-2 text-sm text-red-600 transition hover:border-red-600/40"
+                        type="submit"
+                      >
+                        Excluir
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </div>
+  );
+}
