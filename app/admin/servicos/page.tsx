@@ -88,10 +88,6 @@ export default async function AdminServicesPage() {
               Criar
             </button>
           </form>
-
-          <p className="mt-3 text-xs opacity-60">
-            Observação: no MVP, a duração padrão é 30 minutos, mas você pode ajustar por serviço.
-          </p>
         </section>
 
         {/* List */}
@@ -120,7 +116,6 @@ export default async function AdminServicesPage() {
                           {formatBRLFromCents(s.price_cents)}
                         </span>
                       </div>
-                      <div className="mt-1 text-xs opacity-60">ID: {s.id}</div>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
@@ -180,7 +175,7 @@ export default async function AdminServicesPage() {
                   </div>
 
                   <p className="mt-3 text-xs opacity-60">
-                    Atenção: excluir um serviço pode falhar se ele já estiver vinculado a agendamentos.
+                    Atenção: excluir um serviço vai falhar se ele já estiver vinculado a agendamentos.
                   </p>
                 </li>
               ))}

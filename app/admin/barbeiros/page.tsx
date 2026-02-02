@@ -11,7 +11,6 @@ import {
 type BarberRow = {
   id: string;
   name: string;
-  active: boolean;
 };
 
 type ScheduleRow = {
@@ -45,7 +44,7 @@ export default async function AdminBarbersPage() {
 
   const { data: barbersData, error: barbersError } = await supabase
     .from("barbers")
-    .select("id, name, active")
+    .select("id, name")
     .order("name");
 
   if (barbersError) {
@@ -104,7 +103,7 @@ export default async function AdminBarbersPage() {
         <section className="rounded-2xl border border-black/10 bg-white p-6">
           <h2 className="text-lg font-medium">Adicionar barbeiro</h2>
 
-          <form action={createBarber} className="mt-4 grid gap-3 sm:grid-cols-3">
+          <form action={createBarber} className="mt-4 flex gap-3 sm:grid-cols-3">
             <input
               name="name"
               placeholder="Nome (ex: Lucas)"
@@ -112,19 +111,10 @@ export default async function AdminBarbersPage() {
               className="h-11 rounded-xl border border-black/10 px-4 sm:col-span-2"
             />
 
-            <label className="flex h-11 items-center gap-2 rounded-xl border border-black/10 px-4 text-sm">
-              <input name="active" type="checkbox" defaultChecked className="h-4 w-4" />
-              Ativo
-            </label>
-
             <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90 sm:col-span-3 sm:justify-self-start">
               Criar
             </button>
           </form>
-
-          <p className="mt-3 text-xs opacity-60">
-            Dica: se você não quiser perder histórico, prefira marcar como “inativo” ao invés de excluir.
-          </p>
         </section>
 
         {/* Lista de barbeiros */}
@@ -144,17 +134,7 @@ export default async function AdminBarbersPage() {
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <h2 className="truncate text-lg font-medium">{b.name}</h2>
-                          <span
-                            className={`rounded-full border px-2 py-0.5 text-xs ${
-                              b.active
-                                ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700"
-                                : "border-black/10 bg-black/5 text-black/70"
-                            }`}
-                          >
-                            {b.active ? "Ativo" : "Inativo"}
-                          </span>
                         </div>
-                        <div className="mt-1 text-xs opacity-60">ID: {b.id}</div>
                       </div>
 
                       <div className="flex flex-wrap gap-2">
@@ -174,16 +154,6 @@ export default async function AdminBarbersPage() {
                                 required
                                 className="h-11 rounded-xl border border-black/10 px-4 sm:col-span-2"
                               />
-
-                              <label className="flex h-11 items-center gap-2 rounded-xl border border-black/10 px-4 text-sm">
-                                <input
-                                  name="active"
-                                  type="checkbox"
-                                  defaultChecked={b.active}
-                                  className="h-4 w-4"
-                                />
-                                Ativo
-                              </label>
 
                               <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90 sm:col-span-3 sm:justify-self-start">
                                 Salvar
@@ -276,7 +246,6 @@ export default async function AdminBarbersPage() {
                                       • {asHHMM(s.start_time)}–{asHHMM(s.end_time)}
                                     </span>
                                   </div>
-                                  <div className="mt-1 text-xs opacity-60">ID: {s.id}</div>
                                 </div>
 
                                 <div className="flex flex-wrap gap-2">
@@ -346,13 +315,6 @@ export default async function AdminBarbersPage() {
                         </ul>
                       )}
                     </div>
-
-                    {!b.active && (
-                      <div className="rounded-2xl border border-black/10 bg-black/2 p-4 text-sm opacity-80">
-                        Este barbeiro está <span className="font-medium">inativo</span>.
-                        Você pode manter os horários, mas ele não deve aparecer para agendamento.
-                      </div>
-                    )}
                   </div>
                 </section>
               );

@@ -6,8 +6,7 @@ export async function getBarbers(): Promise<Barber[]> {
 
   const { data, error } = await supabase
     .from("barbers")
-    .select("id, name, active")
-    .eq("active", true)
+    .select("id, name")
     .order("name");
 
   if (error) throw error;

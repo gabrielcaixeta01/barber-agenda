@@ -153,7 +153,7 @@ export default async function AdminHomePage({
         <section className="grid gap-4 sm:grid-cols-3">
           <StatCard title="Agendamentos hoje" value={String(stats.appointmentsToday)} />
           <StatCard title="Agendamentos na semana" value={String(stats.appointmentsWeek)} />
-          <StatCard title="Barbeiros ativos" value={String(stats.activeBarbers)} />
+          <StatCard title="Barbeiros" value={String(stats.totalBarbers)} />
         </section>
 
         {/* Filters */}

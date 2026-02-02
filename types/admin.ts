@@ -1,7 +1,7 @@
 export type AdminStats = {
   appointmentsToday: number;
   appointmentsWeek: number;
-  activeBarbers: number;
+  totalBarbers: number;
 };
 
 export type AdminAppointmentStatus = "active" | "cancelled" | "completed";

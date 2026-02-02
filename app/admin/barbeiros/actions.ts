@@ -31,13 +31,11 @@ function mustTime(v: FormDataEntryValue | null, field: string) {
 
 export async function createBarber(formData: FormData) {
   const name = mustStr(formData.get("name"), "name");
-  const active = asBool(formData.get("active"));
 
   const supabase = await createSupabaseServer();
 
   const { error } = await supabase.from("barbers").insert({
     name,
-    active,
   });
 
   if (error) throw new Error(error.message);
@@ -48,11 +46,10 @@ export async function createBarber(formData: FormData) {
 export async function updateBarber(formData: FormData) {
   const id = mustStr(formData.get("id"), "id");
   const name = mustStr(formData.get("name"), "name");
-  const active = asBool(formData.get("active"));
 
   const supabase = await createSupabaseServer();
 
-  const { error } = await supabase.from("barbers").update({ name, active }).eq("id", id);
+  const { error } = await supabase.from("barbers").update({ name }).eq("id", id);
 
   if (error) throw new Error(error.message);
 

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
-type BarberRow = { id: string; name: string; active: boolean };
+type BarberRow = { id: string; name: string };
 type ServiceRow = { id: string; name: string; duration_minutes: number };
 
 function todayISO() {
@@ -70,7 +70,7 @@ export default async function AdminNewAppointmentPage() {
 
 	const [{ data: barbersData, error: barbersError }, { data: servicesData, error: servicesError }] =
 		await Promise.all([
-			supabase.from("barbers").select("id, name, active").order("name"),
+			supabase.from("barbers").select("id, name").order("name"),
 			supabase.from("services").select("id, name, duration_minutes").order("name"),
 		]);
 

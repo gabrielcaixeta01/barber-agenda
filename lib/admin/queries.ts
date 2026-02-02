@@ -46,8 +46,7 @@ export async function getAdminStats(): Promise<AdminStats> {
 
       supabase
         .from("barbers")
-        .select("id", { count: "exact", head: true })
-        .eq("active", true),
+        .select("id", { count: "exact", head: true }),
     ]);
 
   if (e1) throw e1;
@@ -57,7 +56,7 @@ export async function getAdminStats(): Promise<AdminStats> {
   return {
     appointmentsToday: todayCount ?? 0,
     appointmentsWeek: weekCount ?? 0,
-    activeBarbers: barbersCount ?? 0,
+    totalBarbers: barbersCount ?? 0,
   };
 }
 
@@ -167,7 +166,6 @@ export async function getAdminBarbers() {
   const { data, error } = await supabase
     .from("barbers")
     .select("id, name")
-    .eq("active", true)
     .order("name", { ascending: true });
 
   if (error) throw error;

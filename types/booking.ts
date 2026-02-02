@@ -1,7 +1,6 @@
 export type Barber = {
   id: string;
   name: string;
-  active: boolean;
 };
 
 export type Service = {

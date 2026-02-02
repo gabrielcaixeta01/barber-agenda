@@ -7,7 +7,7 @@ import {
   setAppointmentsFilter,
 } from "./actions";
 
-type BarberRow = { id: string; name: string; active: boolean };
+type BarberRow = { id: string; name: string };
 type ServiceRow = { id: string; name: string; duration_minutes: number };
 
 type AppointmentRow = {
@@ -48,7 +48,7 @@ export default async function AdminAppointmentsPage({
 
   const [{ data: barbersData, error: barbersError }, { data: servicesData, error: servicesError }] =
     await Promise.all([
-      supabase.from("barbers").select("id, name, active").order("name"),
+      supabase.from("barbers").select("id, name").order("name"),
       supabase.from("services").select("id, name, duration_minutes").order("name"),
     ]);
 
@@ -258,7 +258,6 @@ export default async function AdminAppointmentsPage({
                               >
                                 <option value="">Barbeiro a definir</option>
                                 {barbers
-                                  .filter((b) => b.active)
                                   .map((b) => (
                                     <option key={b.id} value={b.id}>
                                       {b.name}
