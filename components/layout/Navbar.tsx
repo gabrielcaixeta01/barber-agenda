@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { logoutAdmin } from "@/app/admin/actions";
 import {
   Calendar,
@@ -31,6 +31,7 @@ type NavItem = {
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   const isAdminArea = pathname.startsWith("/admin");
   const isAdminLogin = pathname === "/admin/login";
@@ -53,14 +54,38 @@ export default function Navbar() {
     [isAdminArea]
   );
 
-  const itemsToRender = isAdminArea
-    ? adminItems.filter((i) => i.show)
-    : navItems.filter((i) => i.show);
+  const itemsToRender = isAdminArea ? adminItems : navItems;
 
+  // Fecha ao navegar + scroll para o topo
   useLayoutEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
+    window.scrollTo(0, 0);
   }, [pathname]);
+
+  // Fecha no ESC + trava scroll + foco
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+
+    // lock scroll (iOS-friendly)
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // foco inicial
+    const t = window.setTimeout(() => closeBtnRef.current?.focus(), 0);
+
+    return () => {
+      window.clearTimeout(t);
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [mobileOpen]);
 
   if (isAdminLogin) return null;
 
@@ -70,11 +95,7 @@ export default function Navbar() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           {/* Brand */}
           <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="group inline-flex items-center gap-2"
-              aria-label="Home"
-            >
+            <Link href="/" className="group inline-flex items-center gap-2" aria-label="Home">
               <span className="relative grid h-9 w-9 place-items-center rounded-xl border border-black/10 bg-white shadow-sm">
                 <span className="h-2 w-2 rounded-full bg-black" />
                 <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-black/5" />
@@ -92,31 +113,28 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden items-center gap-2 md:flex" aria-label="Primary">
-            {itemsToRender.map((item) => {
-              const active =
-                item.href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(item.href);
+            {itemsToRender
+              .filter((i) => i.show)
+              .map((item) => {
+                const active =
+                  item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cx(
-                    "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition",
-                    active
-                      ? "bg-black text-white"
-                      : "text-black/70 hover:bg-black/5 hover:text-black"
-                  )}
-                >
-                  <item.Icon
-                    size={16}
-                    className={cx(active ? "text-white" : "text-black/60")}
-                  />
-                  {item.label}
-                </Link>
-              );
-            })}
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cx(
+                      "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition",
+                      active
+                        ? "bg-black text-white"
+                        : "text-black/70 hover:bg-black/5 hover:text-black"
+                    )}
+                  >
+                    <item.Icon size={16} className={cx(active ? "text-white" : "text-black/60")} />
+                    {item.label}
+                  </Link>
+                );
+              })}
           </nav>
 
           {/* Actions */}
@@ -142,7 +160,10 @@ export default function Navbar() {
                       : "border-black/10 text-black/70 hover:border-black/30"
                   )}
                 >
-                  <User size={16} className={cx(pathname.startsWith("/admin/perfil") ? "text-white" : "text-black/60")} />
+                  <User
+                    size={16}
+                    className={cx(pathname.startsWith("/admin/perfil") ? "text-white" : "text-black/60")}
+                  />
                   Perfil
                 </Link>
 
@@ -165,78 +186,122 @@ export default function Navbar() {
               className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white text-black/80 shadow-sm transition hover:border-black/25 hover:text-black md:hidden"
               aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
               aria-expanded={mobileOpen}
+              aria-controls="mobile-drawer"
             >
               {mobileOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile menu */}
-        <div className={cx("md:hidden", mobileOpen ? "block" : "hidden")}>
-          <div className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
-            <div className="rounded-2xl border border-black/10 bg-white p-2 shadow-sm">
-              <div className="flex flex-col">
-                {itemsToRender.map((item) => {
-                  const active =
-                    item.href === "/"
-                      ? pathname === "/"
-                      : pathname.startsWith(item.href);
+        {/* Mobile Drawer */}
+        <div
+          className={cx(
+            "md:hidden",
+            mobileOpen ? "pointer-events-auto" : "pointer-events-none"
+          )}
+          aria-hidden={!mobileOpen}
+        >
+          {/* Overlay */}
+          <button
+            type="button"
+            aria-label="Fechar menu"
+            onClick={() => setMobileOpen(false)}
+            className={cx(
+              "fixed inset-0 z-55 bg-black/30 backdrop-blur-[2px] transition-opacity",
+              mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+            )}
+          />
 
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cx(
-                        "flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition",
-                        active
-                          ? "bg-black text-white"
-                          : "text-black/70 hover:bg-black/5 hover:text-black"
-                      )}
-                    >
-                      <item.Icon
-                        size={16}
-                        className={cx(active ? "text-white" : "text-black/60")}
-                      />
-                      {item.label}
-                    </Link>
-                  );
-                })}
-
-                {!isAdminArea && (
-                  <div className="mt-2 grid gap-2 border-t border-black/10 pt-2">
-                    <Link
-                      href="/admin/login"
-                      className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-3 py-3 text-center text-sm text-black/70 transition hover:border-black/30 hover:text-black"
-                    >
-                      <User size={16} className="text-black/60" />
-                      Admin
-                    </Link>
-                  </div>
-                )}
-
-                {isAdminArea && (
-                  <div className="mt-2 grid gap-2 border-t border-black/10 pt-2">
-                    <Link
-                      href="/admin/perfil"
-                      className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-3 py-3 text-center text-sm text-black/70 transition hover:border-black/30 hover:text-black"
-                    >
-                      <User size={16} className="text-black/60" />
-                      Perfil
-                    </Link>
-                    <form action={logoutAdmin}>
-                      <button
-                        type="submit"
-                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500/10 px-3 py-3 text-center text-sm text-red-600 transition hover:bg-red-500/20"
-                      >
-                        <LogOut size={16} className="text-red-600" />
-                        Sair
-                      </button>
-                    </form>
-                  </div>
-                )}
+          {/* Panel */}
+          <aside
+            id="mobile-drawer"
+            role="dialog"
+            aria-modal="true"
+            className={cx(
+              "fixed right-0 top-0 z-60 h-dvh w-[86%] max-w-sm overflow-y-auto border-l border-black/10 bg-white shadow-xl transition-transform",
+              mobileOpen ? "translate-x-0" : "translate-x-full"
+            )}
+          >
+            <div className="flex h-16 items-center justify-between border-b border-black/10 px-4">
+              <div className="text-sm font-semibold">
+                {isAdminArea ? "Menu Admin" : "Menu"}
               </div>
+
+              <button
+                ref={closeBtnRef}
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white text-black/80 transition hover:border-black/25"
+                aria-label="Fechar"
+              >
+                <X size={18} />
+              </button>
             </div>
-          </div>
+
+            <div className="p-3">
+              <nav className="space-y-1" aria-label="Mobile">
+                {itemsToRender
+                  .filter((i) => i.show)
+                  .map((item) => {
+                    const active =
+                      item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={cx(
+                          "flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition",
+                          active
+                            ? "bg-black text-white"
+                            : "text-black/70 hover:bg-black/5 hover:text-black"
+                        )}
+                      >
+                        <item.Icon size={18} className={cx(active ? "text-white" : "text-black/60")} />
+                        <span className="font-medium">{item.label}</span>
+                      </Link>
+                    );
+                  })}
+              </nav>
+
+              {!isAdminArea && (
+                <div className="mt-3 border-t border-black/10 pt-3">
+                  <Link
+                    href="/admin/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-3 py-3 text-center text-sm text-black/70 transition hover:border-black/30 hover:text-black"
+                  >
+                    <User size={16} className="text-black/60" />
+                    Admin
+                  </Link>
+                </div>
+              )}
+
+              {isAdminArea && (
+                <div className="mt-3 space-y-2 border-t border-black/10 pt-3">
+                  <Link
+                    href="/admin/perfil"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-3 py-3 text-center text-sm text-black/70 transition hover:border-black/30 hover:text-black"
+                  >
+                    <User size={16} className="text-black/60" />
+                    Perfil
+                  </Link>
+
+                  <form action={logoutAdmin}>
+                    <button
+                      type="submit"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500/10 px-3 py-3 text-center text-sm text-red-600 transition hover:bg-red-500/20"
+                    >
+                      <LogOut size={16} className="text-red-600" />
+                      Sair
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+          </aside>
         </div>
       </div>
 

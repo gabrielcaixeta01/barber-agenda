@@ -60,16 +60,17 @@ function buildTimeRows(start = "09:00", end = "19:00", stepMin = 30) {
 export default async function AdminHomePage({
   searchParams,
 }: {
-  searchParams?: { barberId?: string; serviceId?: string };
+  searchParams?: Promise<{ barberId?: string; serviceId?: string }>;
 }) {
   // Depois você pode trocar por weekStart vindo da URL (?week=yyyy-mm-dd)
   const weekStart = startOfWeekISO(new Date());
   const days = Array.from({ length: 7 }, (_, i) => addDaysISO(weekStart, i));
   const dayLabels = days.map((d) => formatDayLabel(d));
 
+  const sp = await searchParams;
   const filters = {
-    barberId: searchParams?.barberId?.trim() || undefined,
-    serviceId: searchParams?.serviceId?.trim() || undefined,
+    barberId: sp?.barberId?.trim() || undefined,
+    serviceId: sp?.serviceId?.trim() || undefined,
   };
 
   const [stats, today, barbers, services, weekAppointments] = await Promise.all([
