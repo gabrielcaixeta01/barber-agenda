@@ -1,161 +1,153 @@
 import Link from "next/link";
+import { MapPin, Clock, ShieldCheck, ArrowRight, Scissors, CalendarCheck2, Store } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
-      {/* HERO */}
-      <section className="mx-auto max-w-5xl px-6 pt-24 pb-20 text-center">
-        <span className="inline-block rounded-full border border-black/10 px-4 py-1 text-sm">
-          Agendamento online
+    <main className="min-h-screen bg-[#FAFAFA] text-black">
+      {/* HERO - Mais espaçamento e tipografia refinada */}
+      <section className="mx-auto max-w-5xl px-6 pt-28 pb-20 text-center">
+        <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-1.5 text-xs font-medium tracking-wide shadow-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          </span>
+          AGENDAMENTO ONLINE
         </span>
 
-        <h1 className="mt-6 text-4xl font-semibold sm:text-5xl">
-          Corte marcado, <br className="hidden sm:block" />
-          sem complicação
+        <h1 className="mt-8 text-5xl font-bold tracking-tight sm:text-7xl">
+          Corte marcado, <br />
+          <span className="text-black/40">sem complicação.</span>
         </h1>
 
-        <p className="mx-auto mt-6 max-w-xl text-base opacity-80">
+        <p className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-black/60">
           Escolha o serviço, selecione um horário disponível e apareça na
           barbearia. Simples, rápido e sem cadastro.
         </p>
 
-        <div className="mt-10 flex justify-center gap-4">
+        <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4 px-4">
           <Link
             href="/agendar"
-            className="rounded-xl bg-black px-8 py-4 text-white transition hover:opacity-90"
+            className="group flex items-center justify-center gap-2 rounded-full bg-black px-10 py-4 text-white transition-all hover:scale-[1.02] active:scale-95"
           >
             Agendar agora
+            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </Link>
 
           <a
             href="#info"
-            className="rounded-xl border border-black/10 px-8 py-4 transition hover:bg-black/5"
+            className="rounded-full border border-black/10 bg-white px-10 py-4 font-medium transition hover:bg-black/5"
           >
             Ver informações
           </a>
         </div>
       </section>
 
-      {/* COMO FUNCIONA */}
-      <section className="mx-auto max-w-5xl px-6 pb-24">
-        <div className="grid gap-6 sm:grid-cols-3">
+      {/* COMO FUNCIONA - Visual mais leve, sem bordas em volta de tudo */}
+      <section className="mx-auto max-w-5xl px-6 pb-32">
+        <div className="grid gap-12 md:gap-8 sm:grid-cols-3">
           <Step
-            number="01"
+            Icon={Scissors}
             title="Escolha o serviço"
             text="Corte, barba ou combo. Duração e preço claros."
           />
           <Step
-            number="02"
+            Icon={CalendarCheck2}
             title="Escolha o horário"
-            text="Apenas horários realmente disponíveis."
+            text="Apenas horários realmente disponíveis em tempo real."
           />
           <Step
-            number="03"
-            title="Apareça na barbearia"
+            Icon={Store}
+            title="Apareça na unidade"
             text="Pagamento presencial, rápido e sem burocracia."
           />
         </div>
       </section>
 
-      {/* INFORMAÇÕES DA BARBEARIA */}
-      <section
-        id="info"
-        className="mx-auto max-w-5xl px-6 pb-24"
-      >
-        <div className="grid gap-8 sm:grid-cols-3">
-          <InfoCard
-            title="Endereço"
-            text={
-              <>
-                Rua Exemplo, 123<br />
-                Centro – Brasília/DF
-              </>
-            }
-            action={
-              <a
-                href="https://maps.google.com"
-                target="_blank"
-                className="text-sm font-medium underline"
-              >
-                Como chegar
-              </a>
-            }
-          />
+      {/* INFORMAÇÕES - Cards com fundo branco e ícones para facilitar leitura */}
+      <section id="info" className="bg-black/2 border-y border-black/5 py-24">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="grid gap-6 md:grid-cols-3">
+            <InfoCard
+              Icon={MapPin}
+              title="Endereço"
+              text="Jd. Botânico, Q 2, Bloco B, Loja 05 – Brasília/DF"
+              action={
+                <a
+                  href="https://www.google.com/maps/place/Barbearia+Locomotiva/@-15.8513768,-47.8247818,15z/data=!3m1!4b1!4m6!3m5!1s0x935a2369462b225d:0xf0be477ed2f883fb!8m2!3d-15.851377!4d-47.8144821!16s%2Fg%2F11hdnyt1ld?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm font-bold uppercase tracking-wider underline underline-offset-4"
+                >
+                  Abrir no Maps
+                </a>
+              }
+            />
 
-          <InfoCard
-            title="Horário de funcionamento"
-            text={
-              <>
-                Seg a Sex: 9h às 19h<br />
-                Sábado: 9h às 16h
-              </>
-            }
-          />
+            <InfoCard
+              Icon={Clock}
+              title="Funcionamento"
+              text={
+                <span className="block leading-relaxed">
+                  Seg a Sex: 9h às 19h<br />
+                  Sábado: 9h às 16h
+                </span>
+              }
+            />
 
-          <InfoCard
-            title="Política"
-            text="Tolerância de 10 minutos de atraso. Cancelamentos até 2h antes."
-          />
+            <InfoCard
+              Icon={ShieldCheck}
+              title="Política"
+              text="Tolerância de 10 minutos. Cancelamentos até 2h antes."
+            />
+          </div>
         </div>
       </section>
 
-      {/* CTA FINAL */}
-      <section className="border-t border-black/5">
-        <div className="mx-auto max-w-5xl px-6 py-20 text-center">
-          <h2 className="text-2xl font-semibold">
-            Pronto para marcar seu horário?
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-md text-sm opacity-80">
-            Leva menos de 1 minuto e você já sai com o corte garantido.
-          </p>
-
-          <div className="mt-8">
-            <Link
-              href="/agendar"
-              className="rounded-xl bg-black px-8 py-4 text-white transition hover:opacity-90"
-            >
-              Agendar agora
-            </Link>
-          </div>
+      {/* CTA FINAL - Design em "Box" para fechar a página */}
+      <section className="mx-auto max-w-5xl px-6 py-24">
+        <div className="rounded-4xl bg-black p-8 md:p-16 text-center text-white overflow-hidden relative">
+            <div className="relative z-10">
+                <h2 className="text-3xl md:text-4xl font-semibold">Garante seu horário hoje.</h2>
+                <p className="mx-auto mt-4 max-w-md opacity-60">
+                    Leva menos de 1 minuto e você não precisa criar conta.
+                </p>
+                <div className="mt-10">
+                    <Link
+                    href="/agendar"
+                    className="inline-block rounded-full bg-white px-10 py-4 text-black font-semibold transition hover:bg-white/90"
+                    >
+                    Agendar agora
+                    </Link>
+                </div>
+            </div>
+            {/* Elemento decorativo sutil de fundo */}
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
         </div>
       </section>
     </main>
   );
 }
 
-function Step({
-  number,
-  title,
-  text,
-}: {
-  number: string;
-  title: string;
-  text: string;
-}) {
+function Step({ Icon, title, text }: { Icon: LucideIcon; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-black/10 p-6">
-      <div className="text-sm opacity-60">{number}</div>
-      <h3 className="mt-2 text-lg font-medium">{title}</h3>
-      <p className="mt-2 text-sm opacity-80">{text}</p>
+    <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black/5 text-black mb-6">
+        <Icon size={24} strokeWidth={1.5} />
+      </div>
+      <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
+      <p className="mt-3 text-black/50 leading-relaxed">{text}</p>
     </div>
   );
 }
 
-function InfoCard({
-  title,
-  text,
-  action,
-}: {
-  title: string;
-  text: React.ReactNode;
-  action?: React.ReactNode;
-}) {
+function InfoCard({ Icon, title, text, action }: { Icon: LucideIcon; title: string; text: React.ReactNode; action?: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-black/10 p-6">
-      <h3 className="text-lg font-medium">{title}</h3>
-      <p className="mt-3 text-sm opacity-80">{text}</p>
-      {action && <div className="mt-4">{action}</div>}
+    <div className="rounded-3xl bg-white border border-black/5 p-8 shadow-sm transition-hover hover:shadow-md">
+      <Icon size={22} className="text-black/40" strokeWidth={2} />
+      <h3 className="mt-6 text-sm font-bold uppercase tracking-widest text-black/40">{title}</h3>
+      <div className="mt-2 text-lg font-medium text-black/80">{text}</div>
+      {action && <div className="mt-6">{action}</div>}
     </div>
   );
 }
