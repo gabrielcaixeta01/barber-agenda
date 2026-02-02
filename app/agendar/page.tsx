@@ -58,9 +58,10 @@ export default function SchedulePage() {
   }, [date, selectedBarberId]);
 
   const canContinue = Boolean(selectedServiceId) && Boolean(date) && Boolean(selectedTime);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(payload: { name: string; phone: string }) {
-    if (!canContinue) return;
+    if (!canContinue || isSubmitting) return;
 
     const appointment: AppointmentCreate = {
         barber_id: selectedBarberId || null,
@@ -71,17 +72,50 @@ export default function SchedulePage() {
         client_phone: payload.phone,
         };
 
-    // HOJE: só log
-    // DEPOIS: POST /api/appointments
-    console.log("CREATE APPOINTMENT:", appointment);
+    setIsSubmitting(true);
 
-    // WhatsApp link (depois você melhora com mensagem completa)
-    const text = encodeURIComponent(
-      `Agendamento confirmado!\nData: ${date}\nHora: ${selectedTime}\nServiço: ${
-        selectedService?.name ?? ""
-      }\nBarbeiro: ${selectedBarber?.name ?? "Qualquer disponível"}\nNome: ${payload.name}`
-    );
-    window.open(`https://wa.me/?text=${text}`, "_blank");
+    console.log("📤 Enviando agendamento:", appointment);
+
+    try {
+      const response = await fetch("/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(appointment),
+      });
+
+      console.log("📥 Status da resposta:", response.status, response.statusText);
+
+      const data = await response.json();
+      console.log("📥 Dados recebidos:", data);
+
+      if (!response.ok) {
+        console.error("❌ Erro na resposta:", data);
+        alert("Erro ao criar agendamento: " + (data.error || "Erro desconhecido"));
+        return;
+      }
+
+      console.log("✅ Agendamento criado com sucesso!", data.appointment);
+
+      alert(
+        `Agendamento confirmado com sucesso!\n\nData: ${date}\nHora: ${selectedTime}\nServiço: ${
+          selectedService?.name ?? ""
+        }\nBarbeiro: ${selectedBarber?.name ?? "Qualquer disponível"}`
+      );
+
+      // Resetar formulário
+      setSelectedBarberId("");
+      setSelectedServiceId("");
+      setDate(todayISO());
+      setSelectedTime("");
+    } catch (error) {
+      console.error("❌ Erro ao criar agendamento:", error);
+      console.error("Stack trace:", error instanceof Error ? error.stack : "N/A");
+      alert("Erro ao criar agendamento. Verifique o console para mais detalhes.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (

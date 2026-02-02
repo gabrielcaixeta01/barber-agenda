@@ -22,7 +22,7 @@ export default function BookingForm({
           className="rounded-xl border border-black/10 px-4 py-3"
         />
         <input
-          placeholder="Telefone (WhatsApp)"
+          placeholder="Telefone"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           className="rounded-xl border border-black/10 px-4 py-3"
