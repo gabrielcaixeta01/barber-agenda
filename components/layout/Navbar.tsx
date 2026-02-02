@@ -207,13 +207,6 @@ export default function Navbar() {
                 {!isAdminArea && (
                   <div className="mt-2 grid gap-2 border-t border-black/10 pt-2">
                     <Link
-                      href="/agendar"
-                      className="flex items-center justify-center gap-2 rounded-xl bg-black px-3 py-3 text-center text-sm font-medium text-white transition hover:opacity-90"
-                    >
-                      <Calendar size={16} className="text-white" />
-                      Agendar
-                    </Link>
-                    <Link
                       href="/admin/login"
                       className="flex items-center justify-center gap-2 rounded-xl border border-black/10 px-3 py-3 text-center text-sm text-black/70 transition hover:border-black/30 hover:text-black"
                     >
