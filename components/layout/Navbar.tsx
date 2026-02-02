@@ -194,29 +194,24 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Drawer */}
-        <div
-          className={cx(
-            "md:hidden",
-            mobileOpen ? "pointer-events-auto" : "pointer-events-none"
-          )}
-          aria-hidden={!mobileOpen}
-        >
+        <div className="md:hidden">
           {/* Overlay */}
-          <button
-            type="button"
-            aria-label="Fechar menu"
-            onClick={() => setMobileOpen(false)}
-            className={cx(
-              "fixed inset-0 z-55 bg-black/30 backdrop-blur-[2px] transition-opacity",
-              mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
-            )}
-          />
+          {mobileOpen && (
+            <button
+              type="button"
+              aria-label="Fechar menu"
+              onClick={() => setMobileOpen(false)}
+              className="fixed inset-0 z-55 bg-black/30 backdrop-blur-[2px] transition-opacity"
+            />
+          )}
 
           {/* Panel */}
           <aside
             id="mobile-drawer"
             role="dialog"
-            aria-modal="true"
+            aria-modal={mobileOpen}
+            aria-hidden={!mobileOpen}
+            {...(!mobileOpen && { inert: true as boolean })}
             className={cx(
               "fixed right-0 top-0 z-60 h-dvh w-[86%] max-w-sm overflow-y-auto border-l border-black/10 bg-white shadow-xl transition-transform",
               mobileOpen ? "translate-x-0" : "translate-x-full"

@@ -5,10 +5,10 @@ export type Barber = {
 };
 
 export type Service = {
-  price: boolean | null;
   id: string;
   name: string;
-  duration_minutes: number; // 30
+  duration_minutes: number;
+  price_cents: number | null;
 };
 
 export type AppointmentCreate = {

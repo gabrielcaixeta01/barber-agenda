@@ -19,8 +19,8 @@ export async function getServices(): Promise<Service[]> {
 
   const { data, error } = await supabase
     .from("services")
-    .select("id, name, duration_minutes, price")
-    .order("name");
+    .select("id, name, duration_minutes, price_cents")
+    .order("name", { ascending: true });
 
   if (error) throw error;
   return data ?? [];

@@ -182,8 +182,8 @@ export default function SchedulePage() {
     const durationLabel =
       selectedService?.duration_minutes ? `${selectedService.duration_minutes} min` : null;
     const priceLabel =
-      selectedService && "price" in selectedService && (selectedService as Service).price
-        ? `R$ ${(selectedService as Service).price}`
+      selectedService?.price_cents
+        ? `R$ ${(selectedService.price_cents / 100).toFixed(2).replace(".", ",")}`
         : null;
 
     return {
