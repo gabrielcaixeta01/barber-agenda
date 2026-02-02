@@ -6,7 +6,6 @@ import { useLayoutEffect, useMemo, useState } from "react";
 import { logoutAdmin } from "@/app/admin/actions";
 import {
   Calendar,
-  Clock,
   ClipboardList,
   Grid2X2,
   Home,
@@ -49,7 +48,6 @@ export default function Navbar() {
       { href: "/admin/dashboard", label: "Dashboard", show: isAdminArea, Icon: Grid2X2 },
       { href: "/admin/agendamentos", label: "Agendamentos", show: isAdminArea, Icon: ClipboardList },
       { href: "/admin/barbeiros", label: "Barbeiros", show: isAdminArea, Icon: Scissors },
-      { href: "/admin/horarios", label: "Horários", show: isAdminArea, Icon: Clock },
       { href: "/admin/servicos", label: "Serviços", show: isAdminArea, Icon: Tag },
     ],
     [isAdminArea]
