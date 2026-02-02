@@ -106,7 +106,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop nav */}
-          <nav className="hidden items-center gap-2 md:flex">
+          <nav className="hidden items-center gap-2 lg:flex">
             {itemsToRender
               .filter((i) => i.show)
               .map((item) => {
@@ -132,7 +132,7 @@ export default function Navbar() {
             {!isAdminArea && (
               <Link
                 href="/admin/login"
-                className="hidden items-center gap-2 rounded-lg border border-black/10 px-3 py-2 text-sm text-black/70 transition hover:border-black/30 hover:text-black md:inline-flex"
+                className="hidden items-center gap-2 rounded-lg border border-black/10 px-3 py-2 text-sm text-black/70 transition hover:border-black/30 hover:text-black lg:inline-flex"
               >
                 <User size={16} className="text-black/60" />
                 Admin
@@ -140,7 +140,7 @@ export default function Navbar() {
             )}
 
             {isAdminArea && (
-              <div className="hidden items-center gap-2 md:flex">
+              <div className="hidden items-center gap-2 lg:flex">
                 <Link
                   href="/admin/perfil"
                   className={cx(
@@ -166,7 +166,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white text-black/80 shadow-sm md:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-black/10 bg-white text-black/80 shadow-sm lg:hidden"
             >
               <Menu size={18} />
             </button>
@@ -175,7 +175,7 @@ export default function Navbar() {
       </div>
 
       {/* --- MOBILE DRAWER SYSTEM --- */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         {/* Overlay - Sempre no DOM, controlado por opacidade */}
         <div
           className={cx(

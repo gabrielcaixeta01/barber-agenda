@@ -105,7 +105,7 @@ export default function WeekGrid({
                               <div className="flex items-center justify-between gap-2">
                                 <div className="font-medium">{a.client_name}</div>
                                 <span className={cx("rounded-full px-2 py-0.5 text-[10px]", statusBadge(a.status))}>
-                                  {a.status === "active" ? "Ativo" : a.status === "completed" ? "Concluído" : "Cancelado"}
+                                  {a.status === "active" ? "Agendado" : a.status === "completed" ? "Concluído" : "Cancelado"}
                                 </span>
                               </div>
                               <div className="mt-0.5 opacity-70">
@@ -153,7 +153,7 @@ export default function WeekGrid({
                   type="submit"
                   className="rounded-lg border border-black/10 px-3 py-2 text-xs hover:bg-black/5"
                 >
-                  Confirmar presença
+                  Marcar como agendado
                 </button>
               </form>
 

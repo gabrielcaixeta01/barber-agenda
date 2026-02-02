@@ -30,5 +30,23 @@ export async function getAvailability(params: {
   date: string;
   barberId?: string;
 }): Promise<string[]> {
-  return ["09:00", "09:30", "10:00", "10:30", "14:00", "14:30"];
+  const start = "09:00";
+  const end = "19:00";
+  const stepMin = 30;
+
+  const [sh, sm] = start.split(":").map(Number);
+  const [eh, em] = end.split(":").map(Number);
+
+  let minutes = (sh ?? 0) * 60 + (sm ?? 0);
+  const endMin = (eh ?? 0) * 60 + (em ?? 0);
+
+  const slots: string[] = [];
+  while (minutes <= endMin) {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+    minutes += stepMin;
+  }
+
+  return slots;
 }

@@ -9,7 +9,6 @@ import ServiceSelector from "@/components/booking/ServiceSelector";
 import DatePicker from "@/components/booking/DatePicker";
 import TimeSlots from "@/components/booking/TimeSlots";
 import BookingForm from "@/components/booking/BookingForm";
-import Link from "next/link";
 
 function todayISO() {
   const d = new Date();
@@ -358,15 +357,6 @@ export default function SchedulePage() {
             <div className="mt-6 rounded-xl border border-black/10 bg-black/2 p-4 text-xs opacity-80">
               Dica: se você não escolher um barbeiro, a barbearia seleciona{" "}
               <span className="font-medium">o melhor disponível</span> no horário.
-            </div>
-
-            <div className="mt-6">
-              <Link
-                href="/"
-                className="text-sm underline opacity-80 hover:opacity-100"
-              >
-                Voltar para o início
-              </Link>
             </div>
           </div>
         </aside>
