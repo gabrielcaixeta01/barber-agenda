@@ -1,5 +1,10 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
-import type { AdminAppointmentRow, AdminStats } from "@/types/admin";
+import type {
+  AdminAppointmentRow,
+  AdminAppointmentStatus,
+  AdminStats,
+  AdminWeekAppointment,
+} from "@/types/admin";
 
 function toISODateSP(date = new Date()) {
   // Como você usa appointment_date (DATE), o importante é gerar YYYY-MM-DD corretamente.
@@ -81,4 +86,101 @@ export async function getTodayAppointments(): Promise<AdminAppointmentRow[]> {
 
   // O supabase pode retornar barber/service como objeto ou null, já está compatível com o type.
   return (data ?? []) as unknown as AdminAppointmentRow[];
+}
+
+export type WeekAppointmentsFilters = {
+  barberId?: string;
+  serviceId?: string;
+  status?: AdminAppointmentStatus;
+};
+
+export async function getWeekAppointments(params: {
+  weekStartISO: string;
+  weekEndISO: string;
+  filters?: WeekAppointmentsFilters;
+}): Promise<AdminWeekAppointment[]> {
+  const supabase = await createSupabaseServer();
+  const { weekStartISO, weekEndISO, filters } = params;
+
+  let q = supabase
+    .from("appointments")
+    .select(
+      `
+      id,
+      appointment_date,
+      appointment_time,
+      status,
+      client_name,
+      client_phone,
+      barber:barbers ( id, name ),
+      service:services ( id, name, price_cents, duration_minutes )
+    `
+    )
+    .gte("appointment_date", weekStartISO)
+    .lte("appointment_date", weekEndISO);
+
+  if (filters?.barberId) q = q.eq("barber_id", filters.barberId);
+  if (filters?.serviceId) q = q.eq("service_id", filters.serviceId);
+  if (filters?.status) q = q.eq("status", filters.status);
+
+  const { data, error } = await q
+    .order("appointment_date", { ascending: true })
+    .order("appointment_time", { ascending: true });
+
+  if (error) throw error;
+
+  // O supabase pode retornar barber/service como objeto ou null, já está compatível com o type.
+  return (data ?? []) as unknown as AdminWeekAppointment[];
+}
+
+export async function getWeekSummary() {
+  const today = toISODateSP(new Date());
+  const weekEnd = addDaysISO(today, 6);
+  const appointments = await getWeekAppointments({
+    weekStartISO: today,
+    weekEndISO: weekEnd,
+  });
+  const totalAppointments = appointments.length;
+
+  const serviceCountMap: Record<string, number> = {};
+  appointments.forEach((appt) => {
+    const serviceName = appt.service?.name || "Serviço desconhecido";
+    if (!serviceCountMap[serviceName]) {
+      serviceCountMap[serviceName] = 0;
+    }
+    serviceCountMap[serviceName]++;
+  });
+
+  const servicesSummary = Object.entries(serviceCountMap).map(([name, count]) => ({
+    name,
+    count,
+  }));
+
+  return {
+    totalAppointments,
+    servicesSummary,
+  };
+}
+
+export async function getAdminBarbers() {
+  const supabase = await createSupabaseServer();
+  const { data, error } = await supabase
+    .from("barbers")
+    .select("id, name")
+    .eq("active", true)
+    .order("name", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function getAdminServices() {
+  const supabase = await createSupabaseServer();
+  const { data, error } = await supabase
+    .from("services")
+    .select("id, name")
+    .order("name", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
 }

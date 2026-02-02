@@ -5,15 +5,27 @@ type ServiceRow = {
   id: string;
   name: string;
   duration_minutes: number;
+  price_cents: number;
   created_at: string;
 };
+
+function formatBRLFromCents(cents: number) {
+  const v = (cents ?? 0) / 100;
+  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function centsToBRInput(cents: number) {
+  const v = (cents ?? 0) / 100;
+  // "35,00"
+  return v.toFixed(2).replace(".", ",");
+}
 
 export default async function AdminServicesPage() {
   const supabase = await createSupabaseServer();
 
   const { data, error } = await supabase
     .from("services")
-    .select("id, name, duration_minutes, created_at")
+    .select("id, name, duration_minutes, price_cents, created_at")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -45,7 +57,7 @@ export default async function AdminServicesPage() {
         <section className="rounded-2xl border border-black/10 bg-white p-6">
           <h2 className="text-lg font-medium">Adicionar serviço</h2>
 
-          <form action={createService} className="mt-4 grid gap-3 sm:grid-cols-3">
+          <form action={createService} className="mt-4 grid gap-3 sm:grid-cols-4">
             <input
               name="name"
               placeholder="Nome do serviço (ex: Corte)"
@@ -64,7 +76,15 @@ export default async function AdminServicesPage() {
               placeholder="Duração (min)"
             />
 
-            <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90 sm:col-span-3 sm:justify-self-start">
+            <input
+              name="price"
+              inputMode="decimal"
+              placeholder="Preço (ex: 35,00)"
+              required
+              className="h-11 rounded-xl border border-black/10 px-4"
+            />
+
+            <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90 sm:col-span-4 sm:justify-self-start">
               Criar
             </button>
           </form>
@@ -96,6 +116,9 @@ export default async function AdminServicesPage() {
                         <span className="rounded-full border border-black/10 bg-black/5 px-2 py-0.5 text-xs text-black/80">
                           {s.duration_minutes} min
                         </span>
+                        <span className="rounded-full border border-black/10 bg-black/5 px-2 py-0.5 text-xs text-black/80">
+                          {formatBRLFromCents(s.price_cents)}
+                        </span>
                       </div>
                       <div className="mt-1 text-xs opacity-60">ID: {s.id}</div>
                     </div>
@@ -108,7 +131,7 @@ export default async function AdminServicesPage() {
                         </summary>
 
                         <div className="mt-2 rounded-2xl border border-black/10 bg-white p-4">
-                          <form action={updateService} className="grid gap-3 sm:grid-cols-3">
+                          <form action={updateService} className="grid gap-3 sm:grid-cols-4">
                             <input type="hidden" name="id" value={s.id} />
 
                             <input
@@ -128,7 +151,15 @@ export default async function AdminServicesPage() {
                               className="h-11 rounded-xl border border-black/10 px-4"
                             />
 
-                            <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90 sm:col-span-3 sm:justify-self-start">
+                            <input
+                              name="price"
+                              inputMode="decimal"
+                              defaultValue={centsToBRInput(s.price_cents)}
+                              required
+                              className="h-11 rounded-xl border border-black/10 px-4"
+                            />
+
+                            <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90 sm:col-span-4 sm:justify-self-start">
                               Salvar
                             </button>
                           </form>

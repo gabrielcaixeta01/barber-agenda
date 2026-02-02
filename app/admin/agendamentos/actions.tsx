@@ -50,6 +50,7 @@ export async function cancelAppointment(formData: FormData) {
 
   if (error) throw new Error(error.message);
   revalidatePath("/admin/agendamentos");
+  revalidatePath("/admin/dashboard");
 }
 
 export async function reactivateAppointment(formData: FormData) {
@@ -63,6 +64,7 @@ export async function reactivateAppointment(formData: FormData) {
 
   if (error) throw new Error(error.message);
   revalidatePath("/admin/agendamentos");
+  revalidatePath("/admin/dashboard");
 }
 
 export async function updateAppointment(formData: FormData) {
@@ -90,6 +92,27 @@ export async function updateAppointment(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/agendamentos");
+  revalidatePath("/admin/dashboard");
+}
+
+export async function setAppointmentStatus(formData: FormData) {
+  const id = mustStr(formData.get("id"), "id");
+  const status = mustStr(formData.get("status"), "status");
+
+  if (!/^(active|cancelled|completed)$/.test(status)) {
+    throw new Error("Status inválido");
+  }
+
+  const supabase = await createSupabaseServer();
+  const { error } = await supabase
+    .from("appointments")
+    .update({ status })
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/agendamentos");
+  revalidatePath("/admin/dashboard");
 }
 
 export async function deleteAppointment(formData: FormData) {
@@ -101,4 +124,5 @@ export async function deleteAppointment(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/agendamentos");
+  revalidatePath("/admin/dashboard");
 }

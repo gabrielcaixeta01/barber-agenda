@@ -14,7 +14,7 @@ type AppointmentRow = {
   id: string;
   appointment_date: string; // YYYY-MM-DD
   appointment_time: string; // HH:MM:SS
-  status: "active" | "cancelled";
+  status: "active" | "cancelled" | "completed";
   client_name: string;
   client_phone: string;
   barber: { id: string; name: string } | null;
@@ -42,7 +42,7 @@ export default async function AdminAppointmentsPage({
 }) {
   const sp = await searchParams;
   const dateFilter = (sp.date ?? "").trim();
-  const statusFilter = (sp.status ?? "").trim(); // active | cancelled | ""
+  const statusFilter = (sp.status ?? "").trim(); // active | cancelled | completed | ""
 
   const supabase = await createSupabaseServer();
 
@@ -151,6 +151,7 @@ export default async function AdminAppointmentsPage({
             >
               <option value="">Todos</option>
               <option value="active">Ativos</option>
+              <option value="completed">Concluídos</option>
               <option value="cancelled">Cancelados</option>
             </select>
 
@@ -175,6 +176,7 @@ export default async function AdminAppointmentsPage({
             <ul className="divide-y divide-black/10">
               {appointments.map((a) => {
                 const isCancelled = a.status === "cancelled";
+                const isCompleted = a.status === "completed";
 
                 return (
                   <li key={a.id} className="px-6 py-5">
@@ -189,10 +191,12 @@ export default async function AdminAppointmentsPage({
                               "rounded-full border px-2 py-0.5 text-xs",
                               isCancelled
                                 ? "border-black/10 bg-white text-black/50"
-                                : "border-black/15 bg-black/5 text-black/80",
+                                : isCompleted
+                                  ? "border-blue-500/20 bg-blue-500/10 text-blue-700"
+                                  : "border-black/15 bg-black/5 text-black/80",
                             ].join(" ")}
                           >
-                            {isCancelled ? "Cancelado" : "Ativo"}
+                            {isCancelled ? "Cancelado" : isCompleted ? "Concluído" : "Ativo"}
                           </span>
                         </div>
 

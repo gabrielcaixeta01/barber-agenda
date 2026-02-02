@@ -15,15 +15,56 @@ function mustInt(v: FormDataEntryValue | null, field: string) {
   return n;
 }
 
+/**
+ * Aceita:
+ * "35" -> 3500
+ * "35,00" -> 3500
+ * "35.00" -> 3500
+ * "1.234,56" -> 123456
+ * "1,234.56" -> 123456
+ */
+function mustPriceCents(v: FormDataEntryValue | null, field: string) {
+  const raw = String(v ?? "").trim();
+  if (!raw) throw new Error(`Campo obrigatório: ${field}`);
+
+  // Mantém apenas dígitos e separadores
+  const cleaned = raw.replace(/[^\d.,]/g, "");
+  if (!cleaned) throw new Error(`Campo inválido: ${field}`);
+
+  // Heurística:
+  // Se tiver vírgula, assume vírgula como decimal (pt-BR)
+  // Senão, se tiver ponto, assume ponto como decimal
+  // Remove separadores de milhar
+  let normalized = cleaned;
+
+  if (cleaned.includes(",")) {
+    // remove pontos de milhar
+    normalized = cleaned.replace(/\./g, "").replace(",", ".");
+  } else {
+    // remove vírgulas de milhar (caso "1,234.56")
+    normalized = cleaned.replace(/,/g, "");
+  }
+
+  const num = Number(normalized);
+  if (!Number.isFinite(num) || num < 0) throw new Error(`Campo inválido: ${field}`);
+
+  const cents = Math.round(num * 100);
+  if (!Number.isInteger(cents)) throw new Error(`Campo inválido: ${field}`);
+
+  return cents;
+}
+
 export async function createService(formData: FormData) {
   const name = mustStr(formData.get("name"), "name");
   const duration_minutes = mustInt(formData.get("duration_minutes"), "duration_minutes");
+  const price_cents = mustPriceCents(formData.get("price"), "price");
 
   const supabase = await createSupabaseServer();
 
   const { error } = await supabase.from("services").insert({
     name,
     duration_minutes,
+    price_cents,
   });
 
   if (error) throw new Error(error.message);
@@ -35,12 +76,13 @@ export async function updateService(formData: FormData) {
   const id = mustStr(formData.get("id"), "id");
   const name = mustStr(formData.get("name"), "name");
   const duration_minutes = mustInt(formData.get("duration_minutes"), "duration_minutes");
+  const price_cents = mustPriceCents(formData.get("price"), "price");
 
   const supabase = await createSupabaseServer();
 
   const { error } = await supabase
     .from("services")
-    .update({ name, duration_minutes })
+    .update({ name, duration_minutes, price_cents })
     .eq("id", id);
 
   if (error) throw new Error(error.message);
@@ -53,11 +95,6 @@ export async function deleteService(formData: FormData) {
 
   const supabase = await createSupabaseServer();
 
-  // Se houver appointments referenciando service_id, o delete pode falhar se não tiver cascade.
-  // No seu schema atual, appointments -> services não tem cascade (somente references).
-  // Em MVP, você pode:
-  // 1) proibir excluir serviço usado, ou
-  // 2) adicionar regra no banco.
   const { error } = await supabase.from("services").delete().eq("id", id);
 
   if (error) throw new Error(error.message);
