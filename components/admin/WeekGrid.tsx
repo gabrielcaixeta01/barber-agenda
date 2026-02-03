@@ -57,12 +57,12 @@ export default function WeekGrid({
   const statusBadge = (status: AdminAppointmentStatus) => {
     switch (status) {
       case "active":
-        return "bg-emerald-500/10 text-emerald-700";
+        return "bg-emerald-500/10 font-light text-emerald-700";
       case "completed":
-        return "bg-blue-500/10 text-blue-700";
+        return "bg-blue-500/10 font-light text-blue-700";
       case "cancelled":
       default:
-        return "bg-red-500/10 text-red-700";
+        return "bg-red-500/10 font-light text-red-700";
     }
   };
 
@@ -102,13 +102,13 @@ export default function WeekGrid({
                               className="w-full rounded-xl border border-black/10 bg-white p-2 text-left text-xs transition hover:bg-black/5"
                               title={`${a.client_name} • ${a.service?.name ?? "Serviço"}`}
                             >
-                              <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center justify-between gap-1">
                                 <div className="font-medium">{a.client_name}</div>
-                                <span className={cx("rounded-full px-2 py-0.5 text-[10px]", statusBadge(a.status))}>
+                                <span className={cx("rounded-full px-1 py-0.5 text-[10px]", statusBadge(a.status))}>
                                   {a.status === "active" ? "Agendado" : a.status === "completed" ? "Concluído" : "Cancelado"}
                                 </span>
                               </div>
-                              <div className="mt-0.5 opacity-70">
+                              <div className="mt-0.5 opacity-70 font-light">
                                 {a.service?.name ?? "Serviço"} • {a.barber?.name ?? "A definir"}
                               </div>
                             </button>

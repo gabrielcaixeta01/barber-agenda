@@ -155,7 +155,7 @@ export default async function AdminHomePage({
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-lg font-medium">Semana atual</h2>
-              <p className="mt-1 text-sm opacity-70">
+              <p className="mt-1 text-sm font-light opacity-70">
                 {formatDayLabel(days[0])} → {formatDayLabel(days[6])}
               </p>
             </div>
@@ -201,23 +201,37 @@ export default async function AdminHomePage({
           </div>
         </section>
 
-        {/* Week grid */}
-        <section className="rounded-2xl border border-black/10 bg-white">
-          <div className="border-b border-black/10 px-6 py-4">
-            <h2 className="text-lg font-medium">Visão semanal</h2>
-            <p className="mt-1 text-sm opacity-70">
-              Dias x horários. Clique em um card para ver detalhes.
-            </p>
+        {/* Week grid - Melhorada para Responsividade */}
+        <section className="rounded-3xl border border-black/3 bg-white shadow-sm overflow-hidden">
+          <div className="border-b border-black/3 px-6 py-5 flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-medium tracking-tight">Visão semanal</h2>
+              <p className="text-xs font-light text-black/40">
+                Status de ocupação dos profissionais.
+              </p>
+            </div>
+            
+            {/* Badge Visível apenas no Mobile para indicar que há mais dias */}
+            <div className="md:hidden rounded-full bg-black/5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+              Deslize para ver →
+            </div>
           </div>
 
-          <WeekGrid
-            days={days}
-            dayLabels={dayLabels}
-            timeRows={timeRows}
-            weekAppointments={weekAppointments as AdminWeekAppointment[]}
-            barbers={barbers}
-            services={services}
-          />
+          {/* Container com Scroll Horizontal Suave no Mobile 
+              md:overflow-visible garante que no desktop nada mude
+          */}
+          <div className="overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+            <div className="min-w-200 md:min-w-full">
+              <WeekGrid
+                days={days}
+                dayLabels={dayLabels}
+                timeRows={timeRows}
+                weekAppointments={weekAppointments as AdminWeekAppointment[]}
+                barbers={barbers}
+                services={services}
+              />
+            </div>
+          </div>
         </section>
 
         {/* Bottom KPIs (semana) */}
@@ -293,9 +307,9 @@ export default async function AdminHomePage({
                 <li key={a.id} className="px-6 py-4">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <div className="text-sm opacity-70">{String(a.appointment_time).slice(0, 5)}</div>
-                      <div className="font-medium">{a.client_name}</div>
-                      <div className="text-sm opacity-70">
+                      <div className="font-light">{a.client_name}</div>
+                      <div className="text-sm font-light opacity-70">{String(a.appointment_time).slice(0, 5)}</div>
+                      <div className="text-sm font-light opacity-70">
                         {a.service?.name ?? "Serviço"} • {a.barber?.name ?? "Barbeiro a definir"}
                       </div>
                     </div>
@@ -334,7 +348,7 @@ function MiniKpi({
     <div className="rounded-2xl border border-black/10 bg-white p-5">
       <div className="text-sm opacity-60">{title}</div>
       <div className="mt-2 text-xl font-light">{value}</div>
-      <div className="mt-2 text-xs opacity-60">{hint}</div>
+      <div className="mt-2 text-xs font-light opacity-60">{hint}</div>
     </div>
   );
 }
