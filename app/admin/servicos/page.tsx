@@ -1,4 +1,5 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { Scissors, Clock, DollarSign, Plus, Trash2, Edit3, AlertTriangle, Save } from "lucide-react";
 import { createService, updateService, deleteService } from "./actions";
 
 type ServiceRow = {
@@ -25,163 +26,148 @@ export default async function AdminServicesPage() {
 
   const { data, error } = await supabase
     .from("services")
-    .select("id, name, duration_minutes, price_cents, created_at")
+    .select("*")
     .order("created_at", { ascending: false });
 
-  if (error) {
-    return (
-      <div className="min-h-screen p-6">
-        <div className="rounded-2xl border border-black/10 bg-white p-6">
-          <h1 className="text-xl font-semibold">Serviços</h1>
-          <p className="mt-2 text-sm text-red-600">
-            Erro ao carregar serviços: {error.message}
-          </p>
-        </div>
-      </div>
-    );
-  }
+  if (error) return <ErrorState message={error.message} />;
 
   const services = (data ?? []) as ServiceRow[];
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen bg-[#FAFAFA] p-4 md:p-10">
       <div className="mx-auto max-w-4xl space-y-8">
-        <header>
-          <h1 className="text-2xl font-semibold">Serviços</h1>
-          <p className="mt-1 text-sm opacity-70">
-            Crie, edite e remova os serviços disponíveis para agendamento.
-          </p>
+        
+        <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-black">Serviços</h1>
+            <p className="text-black/50">Gerencie o catálogo de cortes, barbas e tratamentos.</p>
+          </div>
+          <div className="flex h-12 items-center gap-2 rounded-2xl bg-black/5 px-4 text-sm font-bold text-black/40">
+            <Scissors size={18} /> {services.length} Cadastrados
+          </div>
         </header>
 
-        {/* Create */}
-        <section className="rounded-2xl border border-black/10 bg-white p-6">
-          <h2 className="text-lg font-medium">Adicionar serviço</h2>
+        {/* Card de Criação */}
+        <section className="rounded-4xl border border-black/5 bg-white p-8 shadow-sm">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
+              <Plus size={20} />
+            </div>
+            <h2 className="text-lg font-bold">Novo Serviço</h2>
+          </div>
 
-          <form action={createService} className="mt-4 grid gap-3 sm:grid-cols-4">
-            <input
-              name="name"
-              placeholder="Nome do serviço (ex: Corte)"
-              required
-              className="h-11 rounded-xl border border-black/10 px-4 sm:col-span-2"
-            />
-
-            <input
-              name="duration_minutes"
-              type="number"
-              min={5}
-              step={5}
-              defaultValue={30}
-              required
-              className="h-11 rounded-xl border border-black/10 px-4"
-              placeholder="Duração (min)"
-            />
-
-            <input
-              name="price"
-              inputMode="decimal"
-              placeholder="Preço (ex: 35,00)"
-              required
-              className="h-11 rounded-xl border border-black/10 px-4"
-            />
-
-            <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90 sm:col-span-4 sm:justify-self-start">
-              Criar
+          <form action={createService} className="grid gap-4 sm:grid-cols-4">
+            <div className="sm:col-span-2 space-y-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/30 ml-1">Nome</label>
+              <input name="name" placeholder="Ex: Corte Degradê" required className="h-12 w-full rounded-2xl border border-black/10 bg-black/2 px-4 focus:border-black outline-none transition" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/30 ml-1">Tempo (min)</label>
+              <input name="duration_minutes" type="number" defaultValue={30} step={5} required className="h-12 w-full rounded-2xl border border-black/10 bg-black/2 px-4 focus:border-black outline-none transition" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/30 ml-1">Preço (R$)</label>
+              <input name="price" placeholder="0,00" required className="h-12 w-full rounded-2xl border border-black/10 bg-black/2 px-4 focus:border-black outline-none transition" />
+            </div>
+            <button className="sm:col-span-4 h-12 rounded-2xl bg-black font-bold text-white transition hover:bg-black/80 active:scale-[0.98]">
+              Adicionar ao Catálogo
             </button>
           </form>
         </section>
 
-        {/* List */}
-        <section className="rounded-2xl border border-black/10 bg-white">
-          <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
-            <h2 className="text-lg font-medium">Lista</h2>
-            <div className="text-sm opacity-70">Total: {services.length}</div>
-          </div>
-
+        {/* Lista de Serviços */}
+        <div className="space-y-4">
           {services.length === 0 ? (
-            <div className="px-6 py-10 text-center text-sm opacity-60">
-              Nenhum serviço cadastrado.
+            <div className="rounded-4xl border-2 border-dashed border-black/5 p-12 text-center text-black/30">
+              Nenhum serviço disponível.
             </div>
           ) : (
-            <ul className="divide-y divide-black/10">
-              {services.map((s) => (
-                <li key={s.id} className="px-6 py-5">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="truncate font-medium">{s.name}</span>
-                        <span className="rounded-full border border-black/10 bg-black/5 px-2 py-0.5 text-xs text-black/80">
-                          {s.duration_minutes} min
-                        </span>
-                        <span className="rounded-full border border-black/10 bg-black/5 px-2 py-0.5 text-xs text-black/80">
-                          {formatBRLFromCents(s.price_cents)}
-                        </span>
+            services.map((s) => (
+              <div key={s.id} className="group overflow-hidden rounded-4xl border border-black/10 bg-white transition-all hover:shadow-md">
+                <details className="group/details">
+                  <summary className="flex cursor-pointer list-none items-center justify-between p-6 outline-none">
+                    <div className="flex flex-1 items-center gap-6">
+                      <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-black/5 text-black/40 sm:flex">
+                        <Scissors size={20} />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-bold text-black">{s.name}</h3>
+                        <div className="flex items-center gap-3">
+                          <span className="flex items-center gap-1 text-xs font-bold text-black/40">
+                            <Clock size={12} /> {s.duration_minutes} min
+                          </span>
+                          <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
+                            <DollarSign size={12} /> {formatBRLFromCents(s.price_cents)}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 rounded-xl bg-black/5 px-4 py-2 text-xs font-bold text-black/60 transition group-hover/details:bg-black group-hover/details:text-white">
+                        <Edit3 size={14} /> Editar
+                      </div>
+                    </div>
+                  </summary>
 
-                    <div className="flex flex-wrap gap-2">
-                      {/* Edit */}
-                      <details className="group">
-                        <summary className="cursor-pointer list-none rounded-xl border border-black/10 px-4 py-2 text-sm transition hover:border-black/30">
-                          Editar
-                        </summary>
+                  {/* Formulário de Edição - Agora fora do fluxo lateral do summary */}
+                  <div className="border-t border-black/5 bg-[#FAFAFA] p-6 animate-in slide-in-from-top-2 duration-300">
+                    <form action={updateService} className="grid gap-4 sm:grid-cols-4">
+                      <input type="hidden" name="id" value={s.id} />
+                      
+                      <div className="sm:col-span-2">
+                        <input name="name" defaultValue={s.name} required className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-sm outline-none focus:border-black" />
+                      </div>
+                      <div>
+                        <input name="duration_minutes" type="number" defaultValue={s.duration_minutes} step={5} required className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-sm outline-none focus:border-black" />
+                      </div>
+                      <div>
+                        <input name="price" defaultValue={centsToBRInput(s.price_cents)} required className="h-11 w-full rounded-xl border border-black/10 bg-white px-4 text-sm outline-none focus:border-black" />
+                      </div>
 
-                        <div className="mt-2 rounded-2xl border border-black/10 bg-white p-4">
-                          <form action={updateService} className="grid gap-3 sm:grid-cols-4">
-                            <input type="hidden" name="id" value={s.id} />
-
-                            <input
-                              name="name"
-                              defaultValue={s.name}
-                              required
-                              className="h-11 rounded-xl border border-black/10 px-4 sm:col-span-2"
-                            />
-
-                            <input
-                              name="duration_minutes"
-                              type="number"
-                              min={5}
-                              step={5}
-                              defaultValue={s.duration_minutes}
-                              required
-                              className="h-11 rounded-xl border border-black/10 px-4"
-                            />
-
-                            <input
-                              name="price"
-                              inputMode="decimal"
-                              defaultValue={centsToBRInput(s.price_cents)}
-                              required
-                              className="h-11 rounded-xl border border-black/10 px-4"
-                            />
-
-                            <button className="h-11 rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:opacity-90 sm:col-span-4 sm:justify-self-start">
-                              Salvar
-                            </button>
-                          </form>
+                      <div className="sm:col-span-4 flex items-center justify-between gap-4 pt-2">
+                        <div className="flex items-center gap-2 text-red-500/60">
+                          <AlertTriangle size={14} />
+                          <span className="text-[10px] font-bold uppercase tracking-tight">Cuidado ao excluir</span>
                         </div>
-                      </details>
+                        <div className="flex gap-2">
+                          <button type="submit" className="flex items-center gap-2 rounded-xl bg-black px-6 py-2.5 text-xs font-bold text-white hover:bg-black/80">
+                            <Save size={14} /> Salvar
+                          </button>
+                        </div>
+                      </div>
+                    </form>
 
-                      {/* Delete */}
-                      <form action={deleteService}>
-                        <input type="hidden" name="id" value={s.id} />
-                        <button
-                          className="rounded-xl border border-black/10 px-4 py-2 text-sm text-red-600 transition hover:border-red-600/40"
-                          type="submit"
-                        >
-                          Excluir
-                        </button>
-                      </form>
+                    <div className="mt-3 flex justify-end">
+                      <DeleteServiceButton id={s.id} />
                     </div>
                   </div>
-
-                  <p className="mt-3 text-xs opacity-60">
-                    Atenção: excluir um serviço vai falhar se ele já estiver vinculado a agendamentos.
-                  </p>
-                </li>
-              ))}
-            </ul>
+                </details>
+              </div>
+            ))
           )}
-        </section>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DeleteServiceButton({ id }: { id: string }) {
+    return (
+        <form action={deleteService}>
+            <input type="hidden" name="id" value={id} />
+            <button className="flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-6 py-2.5 text-xs font-bold text-red-600 hover:bg-red-100 transition">
+                <Trash2 size={14} /> Excluir
+            </button>
+        </form>
+    )
+}
+
+function ErrorState({ message }: { message: string }) {
+  return (
+    <div className="flex min-h-screen items-center justify-center p-6">
+      <div className="max-w-md rounded-3xl border border-red-100 bg-red-50 p-8 text-center text-red-700">
+        <h2 className="text-xl font-bold italic">Erro no sistema</h2>
+        <p className="mt-2 text-sm opacity-80">{message}</p>
       </div>
     </div>
   );
