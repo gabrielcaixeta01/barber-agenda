@@ -167,6 +167,10 @@ export default function SchedulePage() {
       duration: selectedService?.duration_minutes ? `${selectedService.duration_minutes} min` : ""
   }), [selectedBarber, selectedService, date, selectedTime]);
 
+  const hasSelectedTime = !!selectedTime;
+  const hasClientInfo = !!clientName || clientPhone.length >= 10;
+  const isBarberStepCompleted = !!selectedServiceId && (!!selectedBarberId || hasSelectedTime || hasClientInfo);
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-12 lg:py-20">
       <header className="mb-10 text-center md:text-left">
@@ -201,9 +205,9 @@ export default function SchedulePage() {
         <StepContainer 
           number={2} 
           title="Profissional"
-          subTitle={selectedBarberId ? selectedBarber?.name : (step > 2 ? "Qualquer disponível" : undefined)}
+          subTitle={selectedBarberId ? selectedBarber?.name : (isBarberStepCompleted ? "Qualquer disponível" : undefined)}
           isActive={step === 2} 
-          isCompleted={step > 2} // Considera completo se passou daqui
+          isCompleted={isBarberStepCompleted}
           isDisabled={!selectedServiceId}
           onTitleClick={() => selectedServiceId && setStep(2)}
         >
