@@ -73,7 +73,7 @@ export default async function AdminBarbersPage() {
             <h1 className="text-2xl font-semibold tracking-tight text-black">Equipe</h1>
             <p className="text-black/50 font-light">Gerencie seus barbeiros e janelas de atendimento.</p>
           </div>
-          <div className="flex h-12 items-center gap-2 rounded-2xl bg-black/5 px-4 text-sm text-black/40">
+          <div className="flex h-12 items-center font-light gap-2 rounded-2xl bg-black/5 px-4 text-sm text-black/40">
             <Users size={18} /> {barbers.length} Profissionais
           </div>
         </header>

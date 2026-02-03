@@ -136,7 +136,7 @@ export default async function AdminHomePage({
           <div className="flex items-center gap-2">
             <Link
               href="/admin/agendamentos/novo"
-              className="rounded-xl bg-black px-4 py-2 text-sm text-white hover:opacity-90"
+              className="rounded-xl bg-black px-4 py-2 text-sm font-light text-white hover:opacity-90"
             >
               Novo agendamento
             </Link>
@@ -316,7 +316,7 @@ function StatCard({ title, value }: { title: string; value: string }) {
   return (
     <div className="rounded-2xl border border-black/10 bg-white p-5">
       <div className="text-sm opacity-60">{title}</div>
-      <div className="mt-2 text-2xl font-semibold">{value}</div>
+      <div className="mt-2 text-2xl font-light">{value}</div>
     </div>
   );
 }
@@ -333,7 +333,7 @@ function MiniKpi({
   return (
     <div className="rounded-2xl border border-black/10 bg-white p-5">
       <div className="text-sm opacity-60">{title}</div>
-      <div className="mt-2 text-xl font-semibold">{value}</div>
+      <div className="mt-2 text-xl font-light">{value}</div>
       <div className="mt-2 text-xs opacity-60">{hint}</div>
     </div>
   );

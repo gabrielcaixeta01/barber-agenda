@@ -28,10 +28,10 @@ export default function AdminLoginPage() {
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-black text-white shadow-lg shadow-black/20">
               <Lock size={24} strokeWidth={2.5} />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-black">
+            <h1 className="text-xl font-medium tracking-tight text-black">
               Admin
             </h1>
-            <p className="mt-2 text-sm text-black/50">
+            <p className="mt-2 text-sm font-light text-black/50">
               Digite suas credenciais para acessar o painel.
             </p>
           </div>
@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
                   type="email"
                   placeholder="admin@barbearia.com"
                   required
-                  className="w-full rounded-2xl border border-black/10 bg-black/2 py-3.5 pl-12 pr-4 text-sm font-medium outline-none transition-all placeholder:text-black/20 focus:border-black focus:bg-white focus:ring-4 focus:ring-black/5"
+                  className="w-full rounded-2xl border border-black/10 bg-black/2 py-3.5 pl-12 pr-4 text-sm font-light outline-none transition-all placeholder:text-black/20 focus:border-black focus:bg-white focus:ring-4 focus:ring-black/5"
                 />
               </div>
             </div>
@@ -83,11 +83,6 @@ export default function AdminLoginPage() {
             <SubmitButton />
           </form>
         </div>
-
-        {/* Footer Discreto */}
-        <p className="mt-8 text-center text-xs text-black/30">
-          &copy; {new Date().getFullYear()} Barbearia. Todos os direitos reservados.
-        </p>
       </div>
     </main>
   );
@@ -101,7 +96,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="group relative w-full overflow-hidden rounded-2xl bg-black py-4 text-sm font-semibold text-white transition-all hover:bg-gray-900 hover:shadow-lg hover:shadow-black/20 disabled:opacity-70 disabled:cursor-not-allowed"
+      className="group relative w-full overflow-hidden rounded-2xl bg-black py-4 text-sm font-light text-white transition-all hover:bg-gray-900 hover:shadow-lg hover:shadow-black/20 disabled:opacity-70 disabled:cursor-not-allowed"
     >
       <div className="flex items-center justify-center gap-2">
         {pending ? (

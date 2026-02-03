@@ -193,7 +193,7 @@ export default function Navbar() {
           )}
         >
           <div className="flex h-16 items-center justify-between border-b border-black/5 px-4">
-            <span className="text-sm font-bold uppercase tracking-wider text-black/40">
+            <span className="text-sm font-medium uppercase tracking-wider text-black/40">
               {isAdminArea ? "Painel Admin" : "Menu"}
             </span>
             <button
@@ -216,7 +216,7 @@ export default function Navbar() {
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
                     className={cx(
-                      "flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium transition-all active:scale-[0.98]",
+                      "flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-light transition-all active:scale-[0.98]",
                       active ? "bg-black text-white shadow-lg shadow-black/10" : "text-black/70 hover:bg-black/5"
                     )}
                   >
@@ -227,7 +227,7 @@ export default function Navbar() {
               })}
 
             {/* Divisor e Ações Extras */}
-            <div className="my-4 h-px bg-black/5" />
+            <div className="my-4 h-px font-light bg-black/5" />
             
             {!isAdminArea ? (
               <Link
