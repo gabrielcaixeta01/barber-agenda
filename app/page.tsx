@@ -71,10 +71,10 @@ export default function HomePage() {
             <InfoCard
               Icon={MapPin}
               title="Endereço"
-              text="Jd. Botânico, Q 2, Bloco B, Loja 05 – Brasília/DF"
+              text="Rua 123,  – Brasília/DF"
               action={
                 <a
-                  href="https://www.google.com/maps/place/Barbearia+Locomotiva/@-15.8513768,-47.8247818,15z/data=!3m1!4b1!4m6!3m5!1s0x935a2369462b225d:0xf0be477ed2f883fb!8m2!3d-15.851377!4d-47.8144821!16s%2Fg%2F11hdnyt1ld?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
+                  href="https://www.google.com/maps/place/Bras%C3%ADlia+-+Plano+Piloto,+Bras%C3%ADlia+-+DF/@-15.7213681,-48.0197586,12z/data=!3m1!4b1!4m6!3m5!1s0x935a3d18df9ae275:0x738470e469754a24!8m2!3d-15.7975154!4d-47.8918874!16zL20vMDFoeV8?entry=ttu&g_ep=EgoyMDI2MDIwMS4wIKXMDSoASAFQAw%3D%3D"
                   target="_blank"
                   rel="noreferrer"
                   className="text-sm font-bold uppercase tracking-wider underline underline-offset-4"
