@@ -129,17 +129,11 @@ export default async function AdminHomePage({
         {/* Header */}
         <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold">Agenda</h1>
+            <h1 className="text-2xl font-semibold">Dashboard</h1>
             <p className="mt-1 text-sm opacity-70">Visão geral dos atendimentos da barbearia</p>
           </div>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/admin/agendamentos"
-              className="rounded-xl border border-black/10 bg-white px-4 py-2 text-sm hover:bg-black/5"
-            >
-              Ver lista
-            </Link>
             <Link
               href="/admin/agendamentos/novo"
               className="rounded-xl bg-black px-4 py-2 text-sm text-white hover:opacity-90"
@@ -160,7 +154,7 @@ export default async function AdminHomePage({
         <section className="rounded-2xl border border-black/10 bg-white p-4 sm:p-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-lg font-medium">Semana</h2>
+              <h2 className="text-lg font-medium">Semana atual</h2>
               <p className="mt-1 text-sm opacity-70">
                 {formatDayLabel(days[0])} → {formatDayLabel(days[6])}
               </p>
@@ -229,14 +223,14 @@ export default async function AdminHomePage({
         {/* Bottom KPIs (semana) */}
         <section className="grid gap-4 sm:grid-cols-4">
           <MiniKpi
-            title="Faturamento estimado"
+            title="Faturamento Semanal Estimado"
             value={currency.format(estimatedRevenueCents / 100)}
             hint="Somatório dos serviços (sem descontos)"
           />
           <MiniKpi
-            title="Clientes únicos"
+            title="Clientes"
             value={String(uniqueClients)}
-            hint="Telefones únicos na semana"
+            hint="Total de clientes distintos"
           />
           <MiniKpi
             title="Taxa de ocupação"

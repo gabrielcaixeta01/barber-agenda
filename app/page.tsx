@@ -108,14 +108,14 @@ export default function HomePage() {
       <section className="mx-auto max-w-5xl px-6 py-24">
         <div className="rounded-4xl bg-black p-8 md:p-16 text-center text-white overflow-hidden relative">
             <div className="relative z-10">
-                <h2 className="text-3xl md:text-4xl font-semibold">Garante seu horário hoje.</h2>
-                <p className="mx-auto mt-4 max-w-md opacity-60">
+                <h2 className="text-3xl md:text-4xl font-medium">Garante seu horário hoje.</h2>
+                <p className="mx-auto mt-4 max-w-md font-light opacity-60">
                     Leva menos de 1 minuto e você não precisa criar conta.
                 </p>
                 <div className="mt-10">
                     <Link
                     href="/agendar"
-                    className="inline-block rounded-full bg-white px-10 py-4 text-black font-semibold transition hover:bg-white/90"
+                    className="inline-block rounded-full bg-white px-10 py-4 text-black font-light transition hover:bg-white/90"
                     >
                     Agendar agora
                     </Link>
@@ -135,8 +135,8 @@ function Step({ Icon, title, text }: { Icon: LucideIcon; title: string; text: st
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black/5 text-black mb-6">
         <Icon size={24} strokeWidth={1.5} />
       </div>
-      <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
-      <p className="mt-3 text-black/50 leading-relaxed">{text}</p>
+      <h3 className="text-xl font-medium tracking-tight">{title}</h3>
+      <p className="mt-3 text-black/50 font-light leading-relaxed">{text}</p>
     </div>
   );
 }
@@ -145,8 +145,8 @@ function InfoCard({ Icon, title, text, action }: { Icon: LucideIcon; title: stri
   return (
     <div className="rounded-3xl bg-white border border-black/5 p-8 shadow-sm transition-hover hover:shadow-md">
       <Icon size={22} className="text-black/40" strokeWidth={2} />
-      <h3 className="mt-6 text-sm font-bold uppercase tracking-widest text-black/40">{title}</h3>
-      <div className="mt-2 text-lg font-medium text-black/80">{text}</div>
+      <h3 className="mt-6 text-sm font-medium uppercase tracking-widest text-black/40">{title}</h3>
+      <div className="mt-2 text-lg font-light text-black/80">{text}</div>
       {action && <div className="mt-6">{action}</div>}
     </div>
   );

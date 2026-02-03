@@ -50,24 +50,24 @@ export default async function AdminProfilePage() {
           
           <div className="flex-1 text-center md:text-left">
             <div className="flex items-center justify-center gap-2 md:justify-start">
-              <h1 className="text-3xl font-bold tracking-tight">
+              <h1 className="text-3xl font-medium tracking-tight">
                 {profile?.display_name || "Administrador"}
               </h1>
               <BadgeCheck size={20} className="text-blue-400" />
             </div>
             <p className="mt-1 text-white/50">{user.email}</p>
             <div className="mt-4 flex flex-wrap justify-center gap-4 md:justify-start">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/40">
+              <div className="flex items-center gap-2 text-xs font-light uppercase tracking-widest text-white/40">
                 <ShieldCheck size={14} /> Acesso Master
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/40">
+              <div className="flex items-center gap-2 text-xs font-light uppercase tracking-widest text-white/40">
                 <Calendar size={14} /> Desde {new Date(user.created_at).getFullYear()}
               </div>
             </div>
           </div>
 
           <form action={logoutAdmin}>
-            <button className="group flex items-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-sm font-bold transition hover:bg-red-500 hover:text-white">
+            <button className="group flex items-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-sm font-light transition hover:bg-red-500 hover:text-white">
               <LogOut size={18} className="transition-transform group-hover:-translate-x-1" />
               Sair
             </button>
@@ -77,7 +77,7 @@ export default async function AdminProfilePage() {
         <div className="grid gap-8 md:grid-cols-5">
           {/* LADO ESQUERDO: INFOS FIXAS */}
           <div className="space-y-6 md:col-span-2">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-black/30">Segurança</h3>
+            <h3 className="text-sm font-medium uppercase tracking-widest text-black/30">Segurança</h3>
             <div className="space-y-4">
               <InfoCard 
                 label="ID da Conta" 
@@ -95,12 +95,12 @@ export default async function AdminProfilePage() {
 
           {/* LADO DIREITO: EDIÇÃO */}
           <div className="space-y-6 md:col-span-3">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-black/30">Personalização</h3>
+            <h3 className="text-sm font-medium uppercase tracking-widest text-black/30">Personalização</h3>
             
             <section className="rounded-3xl border border-black/5 bg-white p-8 shadow-sm">
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-black">Nome de Exibição</h2>
-                <p className="text-sm text-black/40">Como você aparecerá nos agendamentos e logs.</p>
+                <h2 className="text-lg font-medium text-black">Nome de Exibição</h2>
+                <p className="text-sm font-light text-black/40">Como você aparecerá nos agendamentos e logs.</p>
               </div>
 
               <form action={upsertAdminProfile} className="space-y-4">
@@ -115,7 +115,7 @@ export default async function AdminProfilePage() {
                   />
                 </div>
                 
-                <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-black py-4 text-sm font-bold text-white transition hover:bg-gray-900 active:scale-[0.98]">
+                <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-black py-4 text-sm font-light text-white transition hover:bg-gray-900 active:scale-[0.98]">
                   <Save size={18} />
                   Salvar Alterações
                 </button>
@@ -124,7 +124,7 @@ export default async function AdminProfilePage() {
 
             {/* CARD EXTRA: INFO DE SEGURANÇA */}
             <div className="rounded-3xl bg-blue-50 p-6 text-blue-800">
-              <p className="flex items-center gap-2 text-sm font-bold">
+              <p className="flex items-center gap-2 text-sm font-light">
                 <ShieldCheck size={18} /> Sua conta está segura
               </p>
               <p className="mt-1 text-xs opacity-70">

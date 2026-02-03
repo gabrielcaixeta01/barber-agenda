@@ -39,10 +39,10 @@ export default async function AdminServicesPage() {
         
         <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-black">Serviços</h1>
-            <p className="text-black/50">Gerencie o catálogo de cortes, barbas e tratamentos.</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-black">Serviços</h1>
+            <p className=" font-light text-black/50">Gerencie o catálogo de cortes, barbas e tratamentos.</p>
           </div>
-          <div className="flex h-12 items-center gap-2 rounded-2xl bg-black/5 px-4 text-sm font-bold text-black/40">
+          <div className="flex h-12 items-center gap-2 rounded-2xl bg-black/5 px-4 text-sm text-black/40">
             <Scissors size={18} /> {services.length} Cadastrados
           </div>
         </header>
@@ -53,23 +53,23 @@ export default async function AdminServicesPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
               <Plus size={20} />
             </div>
-            <h2 className="text-lg font-bold">Novo Serviço</h2>
+            <h2 className="text-lg font-medium">Novo Serviço</h2>
           </div>
 
           <form action={createService} className="grid gap-4 sm:grid-cols-4">
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-black/30 ml-1">Nome</label>
+              <label className="text-[10px] font-medium uppercase tracking-wide text-black/40 ml-1">Nome</label>
               <input name="name" placeholder="Ex: Corte Degradê" required className="h-12 w-full rounded-2xl border border-black/10 bg-black/2 px-4 focus:border-black outline-none transition" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-black/30 ml-1">Tempo (min)</label>
+              <label className="text-[10px] font-medium uppercase tracking-wide text-black/40 ml-1">Tempo (min)</label>
               <input name="duration_minutes" type="number" defaultValue={30} step={5} required className="h-12 w-full rounded-2xl border border-black/10 bg-black/2 px-4 focus:border-black outline-none transition" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-black/30 ml-1">Preço (R$)</label>
+              <label className="text-[10px] font-medium uppercase tracking-wide text-black/40 ml-1">Preço (R$)</label>
               <input name="price" placeholder="0,00" required className="h-12 w-full rounded-2xl border border-black/10 bg-black/2 px-4 focus:border-black outline-none transition" />
             </div>
-            <button className="sm:col-span-4 h-12 rounded-2xl bg-black font-bold text-white transition hover:bg-black/80 active:scale-[0.98]">
+            <button className="sm:col-span-4 h-12 rounded-2xl bg-black font-light text-white transition hover:bg-black/80 active:scale-[0.98]">
               Adicionar ao Catálogo
             </button>
           </form>
@@ -91,19 +91,19 @@ export default async function AdminServicesPage() {
                         <Scissors size={20} />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-lg font-bold text-black">{s.name}</h3>
+                        <h3 className="text-lg font-light text-black">{s.name}</h3>
                         <div className="flex items-center gap-3">
-                          <span className="flex items-center gap-1 text-xs font-bold text-black/40">
+                          <span className="flex items-center gap-1 text-xs text-black/40">
                             <Clock size={12} /> {s.duration_minutes} min
                           </span>
-                          <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
+                          <span className="flex items-center gap-1 text-xs font-medium text-emerald-600">
                             <DollarSign size={12} /> {formatBRLFromCents(s.price_cents)}
                           </span>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2 rounded-xl bg-black/5 px-4 py-2 text-xs font-bold text-black/60 transition group-hover/details:bg-black group-hover/details:text-white">
+                      <div className="flex items-center gap-2 rounded-xl bg-black/5 px-4 py-2 text-xs font-medium text-black/60 transition group-hover/details:bg-black group-hover/details:text-white">
                         <Edit3 size={14} /> Editar
                       </div>
                     </div>
@@ -127,10 +127,10 @@ export default async function AdminServicesPage() {
                       <div className="sm:col-span-4 flex items-center justify-between gap-4 pt-2">
                         <div className="flex items-center gap-2 text-red-500/60">
                           <AlertTriangle size={14} />
-                          <span className="text-[10px] font-bold uppercase tracking-tight">Cuidado ao excluir</span>
+                          <span className="text-[10px] font-medium uppercase tracking-tight">Cuidado ao excluir</span>
                         </div>
                         <div className="flex gap-2">
-                          <button type="submit" className="flex items-center gap-2 rounded-xl bg-black px-6 py-2.5 text-xs font-bold text-white hover:bg-black/80">
+                          <button type="submit" className="flex items-center gap-2 rounded-xl bg-black px-6 py-2.5 text-xs font-medium text-white hover:bg-black/80">
                             <Save size={14} /> Salvar
                           </button>
                         </div>
@@ -155,7 +155,7 @@ function DeleteServiceButton({ id }: { id: string }) {
     return (
         <form action={deleteService}>
             <input type="hidden" name="id" value={id} />
-            <button className="flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-6 py-2.5 text-xs font-bold text-red-600 hover:bg-red-100 transition">
+            <button className="flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-6 py-2.5 text-xs font-medium text-red-600 hover:bg-red-100 transition">
                 <Trash2 size={14} /> Excluir
             </button>
         </form>
@@ -166,7 +166,7 @@ function ErrorState({ message }: { message: string }) {
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
       <div className="max-w-md rounded-3xl border border-red-100 bg-red-50 p-8 text-center text-red-700">
-        <h2 className="text-xl font-bold italic">Erro no sistema</h2>
+        <h2 className="text-xl font-semibold italic">Erro no sistema</h2>
         <p className="mt-2 text-sm opacity-80">{message}</p>
       </div>
     </div>

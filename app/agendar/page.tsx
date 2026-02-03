@@ -84,9 +84,6 @@ export default function SchedulePage() {
   useEffect(() => {
     let alive = true;
     (async () => {
-      // NÃO limpamos selectedTime aqui para respeitar a regra de "não apagar infos"
-      // Se o horário selecionado anteriormente não existir na nova lista, 
-      // visualmente ele apenas não aparecerá marcado na lista de slots, mas o estado persiste.
       
       setPageError(null);
       setIsLoadingSlots(true);
@@ -173,8 +170,8 @@ export default function SchedulePage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-12 lg:py-20">
       <header className="mb-10 text-center md:text-left">
-        <h1 className="text-4xl font-bold tracking-tight text-black">Agendar Horário</h1>
-        <p className="mt-2 text-lg text-black/50">Preencha os passos abaixo para garantir seu corte.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-black">Agendar Horário</h1>
+        <p className="mt-2 text-lg font-light text-black/50">Preencha os passos abaixo para garantir seu corte.</p>
       </header>
 
       {/* TIMELINE PRINCIPAL */}
@@ -315,15 +312,15 @@ export default function SchedulePage() {
           isDisabled={!clientName || clientPhone.length < 10}
           onTitleClick={() => clientName && setStep(5)}
         >
-           <div className="overflow-hidden rounded-3xl border border-black/10 bg-white shadow-xl shadow-black/5">
+           <div className="overflow-hidden rounded-3xl border border-black/10 bg-white">
               {/* Header do Ticket */}
               <div className="bg-black p-6 text-white sm:flex sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold">Tudo certo?</h2>
-                  <p className="text-sm opacity-60">Confira os detalhes e confirme.</p>
+                  <h2 className="text-xl font-medium">Tudo certo?</h2>
+                  <p className="text-sm font-light opacity-60">Confira os detalhes e confirme.</p>
                 </div>
                 <div className="mt-4 sm:mt-0">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-light text-white backdrop-blur-md">
                      Pagamento no local
                   </span>
                 </div>
@@ -343,7 +340,7 @@ export default function SchedulePage() {
                     <div>
                         <p className="text-sm font-medium text-black/50">Valor total estimado</p>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-bold tracking-tight">{summary.price}</span>
+                            <span className="text-3xl font-light tracking-tight">{summary.price}</span>
                             {summary.duration && <span className="text-sm text-black/40">({summary.duration})</span>}
                         </div>
                     </div>
@@ -351,7 +348,7 @@ export default function SchedulePage() {
                     <button
                         onClick={handleFinalSubmit}
                         disabled={isSubmitting}
-                        className="rounded-xl bg-black px-8 py-4 text-base font-semibold text-white shadow-lg shadow-black/10 transition hover:scale-[1.02] hover:bg-gray-900 disabled:opacity-70 disabled:scale-100"
+                        className="rounded-xl bg-black px-8 py-4 text-base font-light text-white shadow-lg shadow-black/10 transition hover:scale-[1.02] hover:bg-gray-900 disabled:opacity-70 disabled:scale-100"
                     >
                         {isSubmitting ? "Confirmando..." : "Confirmar Agendamento"}
                     </button>
@@ -405,7 +402,7 @@ function StepContainer({ number, title, subTitle, children, isActive, isComplete
         disabled={isDisabled}
         onClick={onTitleClick}
         className={cx(
-          "absolute left-2 top-0 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold transition-all duration-300",
+          "absolute left-2 top-0 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 font-light transition-all duration-300",
           isCompleted ? "bg-black border-black text-white hover:bg-black/80" : 
           isActive ? "bg-white border-black text-black scale-110 shadow-lg" : "bg-white border-black/10 text-black/30"
         )}
@@ -424,12 +421,12 @@ function StepContainer({ number, title, subTitle, children, isActive, isComplete
         )}
       >
         <span className={cx(
-            "text-2xl font-semibold tracking-tight transition-colors flex items-center gap-3",
+            "text-2xl font-light tracking-tight transition-colors flex items-center gap-3",
             isActive ? "text-black" : "text-black/40 hover:text-black/60",
         )}>
             {title}
             {isCompleted && !isActive && (
-                <span className="text-xs font-medium uppercase tracking-wider text-black/40 flex items-center gap-1 border border-black/10 rounded-full px-2 py-0.5 hover:bg-black/5 hover:text-black">
+                <span className="text-xs font-light uppercase tracking-wider text-black/40 flex items-center gap-1 border border-black/10 rounded-full px-2 py-0.5 hover:bg-black/5 hover:text-black">
                     <Edit2 size={10} /> Editar
                 </span>
             )}
@@ -437,7 +434,7 @@ function StepContainer({ number, title, subTitle, children, isActive, isComplete
         
         {/* Subtitulo (o que foi escolhido) quando fechado */}
         {!isActive && subTitle && (
-            <span className="text-sm font-medium text-black/80 animate-in fade-in slide-in-from-top-1">
+            <span className="text-sm font-light text-black/80 animate-in fade-in slide-in-from-top-1">
                 {subTitle}
             </span>
         )}
@@ -468,8 +465,8 @@ function SummaryRow({ label, value, icon: Icon }: { label: string; value: string
                 <Icon size={16} />
             </div>
             <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-black/30">{label}</p>
-                <p className="text-base font-medium text-black/90 leading-tight">{value}</p>
+                <p className="text-[10px] font-medium uppercase tracking-widest text-black/30">{label}</p>
+                <p className="text-base font-light text-black/90 leading-tight">{value}</p>
             </div>
         </div>
     )

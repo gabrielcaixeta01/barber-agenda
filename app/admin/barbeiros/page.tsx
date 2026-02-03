@@ -70,10 +70,10 @@ export default async function AdminBarbersPage() {
         
         <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-black">Equipe</h1>
-            <p className="text-black/50">Gerencie seus barbeiros e janelas de atendimento.</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-black">Equipe</h1>
+            <p className="text-black/50 font-light">Gerencie seus barbeiros e janelas de atendimento.</p>
           </div>
-          <div className="flex h-12 items-center gap-2 rounded-2xl bg-black/5 px-4 text-sm font-bold text-black/40">
+          <div className="flex h-12 items-center gap-2 rounded-2xl bg-black/5 px-4 text-sm text-black/40">
             <Users size={18} /> {barbers.length} Profissionais
           </div>
         </header>
@@ -86,7 +86,7 @@ export default async function AdminBarbersPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
                   <UserPlus size={20} />
                 </div>
-                <h2 className="text-lg font-bold">Cadastrar novo barbeiro</h2>
+                <h2 className="text-lg font-medium">Cadastrar novo barbeiro</h2>
               </div>
               <Plus size={20} className="text-black/20 transition-transform group-open:rotate-45" />
             </summary>
@@ -98,7 +98,7 @@ export default async function AdminBarbersPage() {
                   required
                   className="h-12 flex-1 rounded-2xl border border-black/10 bg-white px-4 focus:border-black outline-none transition"
                 />
-                <button className="h-12 rounded-2xl bg-black px-8 font-bold text-white transition hover:bg-black/80">
+                <button className="h-12 rounded-2xl bg-black px-8 font-light text-white transition hover:bg-black/80">
                   Criar Cadastro
                 </button>
               </form>
@@ -118,12 +118,12 @@ export default async function AdminBarbersPage() {
                 <details className="group/barber">
                   <summary className="flex cursor-pointer items-center justify-between p-6 list-none outline-none">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black/5 text-xl font-black">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black/5 text-xl font-semibold">
                         {b.name[0].toUpperCase()}
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-black">{b.name}</h3>
-                        <p className="text-sm text-black/40">{list.length} turnos configurados</p>
+                        <h3 className="text-xl font-medium text-black">{b.name}</h3>
+                        <p className="text-sm font-light text-black/40">{list.length} turnos configurados</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -135,11 +135,11 @@ export default async function AdminBarbersPage() {
                     
                     {/* Sub-Seção: Editar Nome */}
                     <div className="space-y-3">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-black/30">Dados do Profissional</label>
+                      <label className="text-[10px] font-medium uppercase tracking-wide text-black/40">Dados do Profissional</label>
                       <form action={updateBarber} className="flex gap-2">
                         <input type="hidden" name="id" value={b.id} />
                         <input name="name" defaultValue={b.name} className="h-11 flex-1 rounded-xl border border-black/10 bg-white px-4 text-sm outline-none focus:border-black" />
-                        <button className="h-11 rounded-xl bg-black px-4 text-xs font-bold text-white">Renomear</button>
+                        <button className="h-11 rounded-xl bg-black px-4 text-xs font-medium text-white">Renomear</button>
                       </form>
                     </div>
 
@@ -147,7 +147,7 @@ export default async function AdminBarbersPage() {
                     <div className="flex justify-end">
                       <form action={deleteBarber}>
                         <input type="hidden" name="id" value={b.id} />
-                        <button className="h-10 rounded-xl border border-red-200 bg-red-50 px-4 text-xs font-bold text-red-600 transition hover:bg-red-100" title="Excluir Barbeiro">
+                        <button className="h-10 rounded-xl border border-red-200 bg-red-50 px-4 text-xs font-medium text-red-600 transition hover:bg-red-100" title="Excluir Barbeiro">
                           Excluir barbeiro
                         </button>
                       </form>
@@ -157,7 +157,7 @@ export default async function AdminBarbersPage() {
                     <div className="rounded-3xl border border-black/5 bg-white p-6 shadow-sm">
                       <div className="flex items-center gap-2 mb-4">
                         <Timer size={18} className="text-black/30" />
-                        <h4 className="font-bold text-sm">Novo Período de Trabalho</h4>
+                        <h4 className="font-semibold text-sm">Novo Período de Trabalho</h4>
                       </div>
                       <form action={createSchedule} className="grid grid-cols-1 gap-3 sm:grid-cols-4">
                         <input type="hidden" name="barber_id" value={b.id} />
@@ -166,13 +166,13 @@ export default async function AdminBarbersPage() {
                         </select>
                         <input name="start_time" type="time" defaultValue="09:00" className="h-11 rounded-xl border border-black/10 px-4 text-sm" />
                         <input name="end_time" type="time" defaultValue="18:00" className="h-11 rounded-xl border border-black/10 px-4 text-sm" />
-                        <button className="h-11 rounded-xl bg-black font-bold text-white text-xs hover:bg-black/80 transition">Adicionar</button>
+                        <button className="h-11 rounded-xl bg-black font-medium text-white text-xs hover:bg-black/80 transition">Adicionar</button>
                       </form>
                     </div>
 
                     {/* Sub-Seção: Lista de Horários */}
                     <div className="space-y-3">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-black/30">Janelas Atuais</label>
+                        <label className="text-[10px] font-medium uppercase tracking-wide text-black/40">Janelas Atuais</label>
                         {list.length === 0 ? (
                             <p className="text-sm text-black/30 italic">Nenhum horário definido.</p>
                         ) : (
@@ -182,7 +182,7 @@ export default async function AdminBarbersPage() {
                                         <div className="flex items-center gap-3">
                                             <div className="text-black/20"><CalendarIcon size={16} /></div>
                                             <div>
-                                                <p className="text-sm font-bold">{dowLabel(s.day_of_week)}</p>
+                                                <p className="text-sm font-medium">{dowLabel(s.day_of_week)}</p>
                                                 <p className="text-xs text-black/50">{asHHMM(s.start_time)} — {asHHMM(s.end_time)}</p>
                                             </div>
                                         </div>
