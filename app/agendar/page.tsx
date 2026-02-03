@@ -30,6 +30,8 @@ function formatDateBR(iso: string) {
   return `${d}/${m}/${y}`;
 }
 
+
+
 export default function SchedulePage() {
   const [step, setStep] = useState(1);
 
@@ -63,6 +65,11 @@ export default function SchedulePage() {
     () => services.find((s) => s.id === selectedServiceId) || null,
     [services, selectedServiceId]
   );
+
+  function clearFeedback() {
+  if (pageError) setPageError(null);
+  if (success) setSuccess(null);
+}
 
   // 1. Carga Inicial
   useEffect(() => {
@@ -178,6 +185,23 @@ export default function SchedulePage() {
         <p className="mt-2 text-lg font-light text-black/50">Preencha os passos abaixo para garantir seu corte.</p>
       </header>
 
+      {/* FEEDBACK GLOBAL (fora do resumo) */}
+      {success && (
+        <div className="mb-8">
+          <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+            <span className="font-medium">✅ {success}</span>
+            <button
+              type="button"
+              onClick={() => setSuccess(null)}
+              className="rounded-lg px-2 py-1 text-emerald-900/60 hover:bg-emerald-100 hover:text-emerald-900"
+              aria-label="Fechar mensagem de sucesso"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* TIMELINE PRINCIPAL */}
       <div className="space-y-0">
           
@@ -189,16 +213,19 @@ export default function SchedulePage() {
           isActive={step === 1} 
           isCompleted={!!selectedServiceId}
           onTitleClick={() => setStep(1)}
-        >
-          <ServiceSelector
-            services={services}
-            value={selectedServiceId}
-            onChange={(v) => {
-              setSelectedServiceId(v);
-              // Avança automaticamente se for a primeira vez, mas não limpa nada
-              if (step === 1) setStep(2);
-            }}
-          />
+        >          
+          <div className="bg-white border border-black/10 rounded-2xl p-2">
+            <ServiceSelector
+              services={services}
+              value={selectedServiceId}
+              onChange={(v) => {
+                clearFeedback();
+                setSelectedServiceId(v);
+                // Avança automaticamente se for a primeira vez, mas não limpa nada
+                if (step === 1) setStep(2);
+              }}
+            />
+          </div>
         </StepContainer>
 
         {/* PASSO 2: PROFISSIONAL */}
@@ -211,15 +238,19 @@ export default function SchedulePage() {
           isDisabled={!selectedServiceId}
           onTitleClick={() => selectedServiceId && setStep(2)}
         >
-          <BarberSelector
-            barbers={barbers}
-            value={selectedBarberId}
-            onChange={(v) => {
-              setSelectedBarberId(v);
-              if (step === 2) setStep(3);
-            }}
-            allowAny
-          />
+          <div className="bg-white border border-black/10 rounded-2xl p-2">
+            <BarberSelector
+              barbers={barbers}
+              value={selectedBarberId}
+              onChange={(v) => {
+                clearFeedback();
+                setSelectedBarberId(v);
+                if (step === 2) setStep(3);
+              }}
+              allowAny
+            />
+          </div>
+          
         </StepContainer>
 
         {/* PASSO 3: DATA E HORA */}
@@ -233,8 +264,10 @@ export default function SchedulePage() {
           onTitleClick={() => selectedServiceId && setStep(3)}
         >
           <div className="space-y-6">
-            <DatePicker value={date} onChange={setDate} />
-            <div className="pt-4 border-t border-black/5">
+            <div className="rounded-2xl border border-black/10 bg-white p-2">
+              <DatePicker value={date} onChange={(value) => { clearFeedback(); setDate(value); }} />
+            </div>
+            <div className="pt-4 border bg-white rounded-2xl p-2  border-black/10">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-medium flex items-center gap-2">
                   <Clock size={18} /> Horários disponíveis
@@ -245,6 +278,7 @@ export default function SchedulePage() {
                 slots={slots}
                 value={selectedTime}
                 onChange={(v) => {
+                  clearFeedback();
                   setSelectedTime(v);
                   if (step === 3) setStep(4);
                 }}
@@ -273,7 +307,7 @@ export default function SchedulePage() {
                   <input 
                     type="text"
                     value={clientName}
-                    onChange={(e) => setClientName(e.target.value)}
+                    onChange={(e) => { clearFeedback(); setClientName(e.target.value); }}
                     placeholder="Ex: João Silva"
                     className="w-full rounded-xl border border-black/10 bg-transparent py-2.5 pl-10 pr-4 outline-none transition focus:border-black"
                   />
@@ -286,7 +320,7 @@ export default function SchedulePage() {
                   <input 
                     type="tel"
                     value={clientPhone}
-                    onChange={(e) => setClientPhone(e.target.value)}
+                    onChange={(e) => { clearFeedback(); setClientPhone(e.target.value); }}
                     placeholder="(00) 00000-0000"
                     className="w-full rounded-xl border border-black/10 bg-transparent py-2.5 pl-10 pr-4 outline-none transition focus:border-black"
                   />
@@ -298,7 +332,7 @@ export default function SchedulePage() {
               <button
                 type="button"
                 disabled={!clientName || clientPhone.length < 10}
-                onClick={() => setStep(5)}
+                onClick={() => { clearFeedback(); setStep(5); }}
                 className="flex items-center gap-2 rounded-xl bg-black px-6 py-3 text-sm font-medium text-white transition hover:bg-black/80 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Revisar agendamento <ArrowRight size={16} />
@@ -316,12 +350,16 @@ export default function SchedulePage() {
           isDisabled={!clientName || clientPhone.length < 10}
           onTitleClick={() => clientName && setStep(5)}
         >
-           <div className="overflow-hidden rounded-3xl border border-black/10 bg-white">
+           <div
+              className="
+                overflow-hidden rounded-3xl border border-black/10 bg-white
+              "
+            >
               {/* Header do Ticket */}
-              <div className="bg-black p-6 text-white sm:flex sm:items-center sm:justify-between">
+              <div className="bg-black p-4 text-white sm:flex sm:items-center sm:justify-between sm:p-6">
                 <div>
-                  <h2 className="text-xl font-medium">Tudo certo?</h2>
-                  <p className="text-sm font-light opacity-60">Confira os detalhes e confirme.</p>
+                  <h2 className="text-lg font-medium sm:text-xl">Tudo certo?</h2>
+                  <p className="text-xs font-light opacity-70 sm:text-sm">Confira os detalhes e confirme.</p>
                 </div>
                 <div className="mt-4 sm:mt-0">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-light text-white backdrop-blur-md">
@@ -330,8 +368,8 @@ export default function SchedulePage() {
                 </div>
               </div>
               
-              <div className="p-6 md:p-8">
-                <div className="grid gap-6 md:grid-cols-2">
+              <div className="p-4 sm:p-6 md:p-8">
+                <div className="grid gap-5 sm:gap-6 md:grid-cols-2">
                   <SummaryRow label="Serviço" value={summary.service} icon={Scissors} />
                   <SummaryRow label="Profissional" value={summary.barber} icon={User} />
                   <SummaryRow label="Data" value={summary.date} icon={CalendarIcon} />
@@ -344,15 +382,20 @@ export default function SchedulePage() {
                     <div>
                         <p className="text-sm font-medium text-black/50">Valor total estimado</p>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-light tracking-tight">{summary.price}</span>
+                            <span className="text-2xl font-light tracking-tight sm:text-3xl">{summary.price}</span>
                             {summary.duration && <span className="text-sm text-black/40">({summary.duration})</span>}
                         </div>
                     </div>
 
                     <button
-                        onClick={handleFinalSubmit}
-                        disabled={isSubmitting}
-                        className="rounded-xl bg-black px-8 py-4 text-base font-light text-white shadow-lg shadow-black/10 transition hover:scale-[1.02] hover:bg-gray-900 disabled:opacity-70 disabled:scale-100"
+                      onClick={handleFinalSubmit}
+                      disabled={isSubmitting}
+                      className="
+                        w-full md:w-auto
+                        rounded-xl bg-black px-6 py-3.5 text-sm sm:text-base font-light text-white
+                        shadow-lg shadow-black/10 transition hover:scale-[1.02] hover:bg-gray-900
+                        disabled:opacity-70 disabled:scale-100
+                      "
                     >
                         {isSubmitting ? "Confirmando..." : "Confirmar Agendamento"}
                     </button>
@@ -362,11 +405,6 @@ export default function SchedulePage() {
                 {pageError && (
                     <div className="mt-6 rounded-xl bg-red-50 p-4 text-center text-sm text-red-600">
                         {pageError}
-                    </div>
-                )}
-                {success && (
-                    <div className="mt-6 rounded-xl bg-emerald-50 p-4 text-center text-sm font-medium text-emerald-800">
-                        ✅ {success}
                     </div>
                 )}
               </div>
@@ -391,14 +429,16 @@ interface StepContainerProps {
   onTitleClick?: () => void;
 }
 
+
 function StepContainer({ number, title, subTitle, children, isActive, isCompleted, isDisabled, onTitleClick }: StepContainerProps) {
   return (
     <div className={cx(
-        "group relative pl-14 transition-all duration-500",
+        "group relative transition-all duration-500",
+        "pl-14 sm:pl-20", // Aumentado para dar respiro à linha
         isDisabled ? "opacity-40 grayscale" : "opacity-100"
     )}>
-      {/* Linha Vertical */}
-      <div className="absolute left-6.75 top-12 bottom-0 w-px bg-black/10 group-last:hidden" />
+      {/* Linha Vertical - Ajustada para centralizar perfeitamente atrás do círculo */}
+      <div className="absolute left-5 sm:left-7 z-[-1] top-0 bottom-0 w-px bg-black/8 group-last:hidden pointer-events-none" />
       
       {/* Botão circular do número */}
       <button 
@@ -406,9 +446,10 @@ function StepContainer({ number, title, subTitle, children, isActive, isComplete
         disabled={isDisabled}
         onClick={onTitleClick}
         className={cx(
-          "absolute left-2 top-0 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 font-light transition-all duration-300",
+          "absolute left-0 sm:left-2 top-0 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 font-light transition-all duration-300",
+          // O segredo está no bg-white ou bg-black sólido para cobrir a linha
           isCompleted ? "bg-black border-black text-white hover:bg-black/80" : 
-          isActive ? "bg-white border-black text-black scale-110 shadow-lg" : "bg-white border-black/10 text-black/30"
+          isActive ? "bg-white border-black text-black scale-110 shadow-xl" : "bg-[#F8F9FA] border-black/10 text-black/30"
         )}
       >
         {isCompleted && !isActive ? <Check size={18} /> : number}
@@ -421,7 +462,7 @@ function StepContainer({ number, title, subTitle, children, isActive, isComplete
         onClick={onTitleClick}
         className={cx(
             "flex flex-col items-start text-left w-full outline-none transition-all",
-            isActive ? "mb-6" : "mb-2"
+            isActive ? "mb-6" : "mb-8" // Aumentado mb-8 para distanciar a linha visualmente quando fechado
         )}
       >
         <span className={cx(
@@ -430,15 +471,15 @@ function StepContainer({ number, title, subTitle, children, isActive, isComplete
         )}>
             {title}
             {isCompleted && !isActive && (
-                <span className="text-xs font-light uppercase tracking-wider text-black/40 flex items-center gap-1 border border-black/10 rounded-full px-2 py-0.5 hover:bg-black/5 hover:text-black">
-                    <Edit2 size={10} /> Editar
+                <span className="text-[10px] font-bold uppercase tracking-widest text-black/30 flex items-center gap-1 border border-black/5 rounded-full px-2 py-1 hover:bg-black/5 hover:text-black transition-colors">
+                    <Edit2 size={10} /> Alterar
                 </span>
             )}
         </span>
         
         {/* Subtitulo (o que foi escolhido) quando fechado */}
         {!isActive && subTitle && (
-            <span className="text-sm font-light text-black/80 animate-in fade-in slide-in-from-top-1">
+            <span className="text-sm font-medium text-black/70 animate-in fade-in slide-in-from-top-1 mt-1">
                 {subTitle}
             </span>
         )}
@@ -448,11 +489,14 @@ function StepContainer({ number, title, subTitle, children, isActive, isComplete
       <div 
         className={cx(
             "grid transition-[grid-template-rows,opacity,padding] duration-500 ease-in-out",
-            isActive ? "grid-rows-[1fr] opacity-100 mb-12" : "grid-rows-[0fr] opacity-0 mb-0"
+            isActive ? "grid-rows-[1fr] opacity-100 mb-16" : "grid-rows-[0fr] opacity-0 mb-0"
         )}
       >
-        <div className="overflow-hidden">
-            <div className="py-1">
+        <div className={cx(isActive ? "overflow-visible" : "overflow-hidden")}>
+            <div className={cx(
+              "py-2",
+              "-ml-14 w-[calc(100%+3.5rem)] sm:ml-0 sm:w-full"
+            )}>
                 {children}
             </div>
         </div>
