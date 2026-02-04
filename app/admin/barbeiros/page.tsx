@@ -1,4 +1,4 @@
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdminServer } from "@/lib/supabase/server";
 import { 
   Users, 
   Calendar as CalendarIcon, 
@@ -48,7 +48,7 @@ function dowLabel(v: number) {
 }
 
 export default async function AdminBarbersPage() {
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const [{ data: barbersData }, { data: schedulesData }] = await Promise.all([
     supabase.from("barbers").select("id, name").order("name"),

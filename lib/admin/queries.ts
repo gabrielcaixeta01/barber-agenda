@@ -1,4 +1,4 @@
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdminServer } from "@/lib/supabase/server";
 import type {
   AdminAppointmentRow,
   AdminAppointmentStatus,
@@ -24,7 +24,7 @@ function addDaysISO(isoDate: string, days: number) {
 }
 
 export async function getAdminStats(): Promise<AdminStats> {
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const today = toISODateSP(new Date());
   const weekEnd = addDaysISO(today, 6);
@@ -61,7 +61,7 @@ export async function getAdminStats(): Promise<AdminStats> {
 }
 
 export async function getTodayAppointments(): Promise<AdminAppointmentRow[]> {
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
   const today = toISODateSP(new Date());
 
   const { data, error } = await supabase
@@ -98,7 +98,7 @@ export async function getWeekAppointments(params: {
   weekEndISO: string;
   filters?: WeekAppointmentsFilters;
 }): Promise<AdminWeekAppointment[]> {
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
   const { weekStartISO, weekEndISO, filters } = params;
 
   let q = supabase
@@ -162,7 +162,7 @@ export async function getWeekSummary() {
 }
 
 export async function getAdminBarbers() {
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
   const { data, error } = await supabase
     .from("barbers")
     .select("id, name")
@@ -173,7 +173,7 @@ export async function getAdminBarbers() {
 }
 
 export async function getAdminServices() {
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
   const { data, error } = await supabase
     .from("services")
     .select("id, name")

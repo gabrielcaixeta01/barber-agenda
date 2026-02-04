@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdminServer } from "@/lib/supabase/server";
 
 function mustStr(v: FormDataEntryValue | null, field: string) {
   const s = String(v ?? "").trim();
@@ -41,7 +41,7 @@ export async function setAppointmentsFilter(formData: FormData) {
 
 export async function cancelAppointment(formData: FormData) {
   const id = mustStr(formData.get("id"), "id");
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const { error } = await supabase
     .from("appointments")
@@ -55,7 +55,7 @@ export async function cancelAppointment(formData: FormData) {
 
 export async function reactivateAppointment(formData: FormData) {
   const id = mustStr(formData.get("id"), "id");
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const { error } = await supabase
     .from("appointments")
@@ -77,7 +77,7 @@ export async function updateAppointment(formData: FormData) {
   // barbeiro pode ser vazio (a definir)
   const barber_id = optionalStr(formData.get("barber_id"));
 
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const { error } = await supabase
     .from("appointments")
@@ -103,7 +103,7 @@ export async function setAppointmentStatus(formData: FormData) {
     throw new Error("Status inválido");
   }
 
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
   const { error } = await supabase
     .from("appointments")
     .update({ status })
@@ -117,7 +117,7 @@ export async function setAppointmentStatus(formData: FormData) {
 
 export async function deleteAppointment(formData: FormData) {
   const id = mustStr(formData.get("id"), "id");
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const { error } = await supabase.from("appointments").delete().eq("id", id);
 

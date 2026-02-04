@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdminServer } from "@/lib/supabase/server";
 
 function mustStr(v: FormDataEntryValue | null, field: string) {
   const s = String(v ?? "").trim();
@@ -59,7 +59,7 @@ export async function createService(formData: FormData) {
   const duration_minutes = mustInt(formData.get("duration_minutes"), "duration_minutes");
   const price_cents = mustPriceCents(formData.get("price"), "price");
 
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const { error } = await supabase.from("services").insert({
     name,
@@ -78,7 +78,7 @@ export async function updateService(formData: FormData) {
   const duration_minutes = mustInt(formData.get("duration_minutes"), "duration_minutes");
   const price_cents = mustPriceCents(formData.get("price"), "price");
 
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const { error } = await supabase
     .from("services")
@@ -93,7 +93,7 @@ export async function updateService(formData: FormData) {
 export async function deleteService(formData: FormData) {
   const id = mustStr(formData.get("id"), "id");
 
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const { error } = await supabase.from("services").delete().eq("id", id);
 

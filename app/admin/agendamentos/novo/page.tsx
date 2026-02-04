@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdminServer } from "@/lib/supabase/server";
 
 type BarberRow = { id: string; name: string };
 type ServiceRow = { id: string; name: string; duration_minutes: number };
@@ -45,7 +45,7 @@ async function createWalkInAppointment(formData: FormData) {
 	const client_phone = mustStr(formData.get("client_phone"), "client_phone");
 	const barber_id = optionalStr(formData.get("barber_id"));
 
-	const supabase = await createSupabaseServer();
+	const supabase = await createSupabaseAdminServer();
 	const { error } = await supabase
 		.from("appointments")
 		.insert([
@@ -66,7 +66,7 @@ async function createWalkInAppointment(formData: FormData) {
 }
 
 export default async function AdminNewAppointmentPage() {
-	const supabase = await createSupabaseServer();
+	const supabase = await createSupabaseAdminServer();
 
 	const [{ data: barbersData, error: barbersError }, { data: servicesData, error: servicesError }] =
 		await Promise.all([

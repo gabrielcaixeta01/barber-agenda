@@ -1,4 +1,4 @@
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdminServer } from "@/lib/supabase/server";
 import Link from "next/link";
 import { Clock, User, Scissors, XCircle, Trash2, RefreshCcw, History, CalendarDays, Edit2, ChevronDown, CheckCircle2, AlertCircle } from "lucide-react";
 import { cancelAppointment, reactivateAppointment, updateAppointment, deleteAppointment, setAppointmentsFilter } from "./actions";
@@ -41,7 +41,7 @@ export default async function AdminAppointmentsPage({
   const statusFilter = (sp.status ?? "").trim();
   const currentView = sp.view ?? "upcoming";
 
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
   const today = todayISO();
 
   const [bRes] = await Promise.all([

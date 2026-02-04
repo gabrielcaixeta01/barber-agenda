@@ -1,4 +1,4 @@
-import { createSupabaseServer } from "@/lib/supabase/server";
+import { createSupabaseAdminServer } from "@/lib/supabase/server";
 import { Scissors, Clock, DollarSign, Plus, Trash2, Edit3, AlertTriangle, Save } from "lucide-react";
 import { createService, updateService, deleteService } from "./actions";
 
@@ -22,7 +22,7 @@ function centsToBRInput(cents: number) {
 }
 
 export default async function AdminServicesPage() {
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseAdminServer();
 
   const { data, error } = await supabase
     .from("services")

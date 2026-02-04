@@ -34,6 +34,9 @@ export default function AdminLoginPage() {
             <p className="mt-2 text-sm font-light text-black/50">
               Digite suas credenciais para acessar o painel.
             </p>
+            <div className="mt-4 rounded-2xl border border-black/5 bg-black/2 px-4 py-3 text-xs text-black/60">
+              <span className="font-semibold text-black/70">Acesso</span> usuário: admin@gmail.com • senha: 123456
+            </div>
           </div>
 
           <form action={handleLogin} className="space-y-5">
