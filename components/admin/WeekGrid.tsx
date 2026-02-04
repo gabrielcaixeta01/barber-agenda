@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { AdminWeekAppointment, AdminAppointmentStatus } from "@/types/admin";
+import type { AdminWeekAppointment } from "@/types/admin";
 import { setAppointmentStatus, updateAppointment } from "@/app/admin/agendamentos/actions";
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -54,17 +54,6 @@ export default function WeekGrid({
   }, [weekAppointments]);
 
   const selectedService = services.find((s) => s.id === selected?.service?.id);
-  const statusBadge = (status: AdminAppointmentStatus) => {
-    switch (status) {
-      case "active":
-        return "bg-emerald-500/10 font-light text-emerald-700";
-      case "completed":
-        return "bg-blue-500/10 font-light text-blue-700";
-      case "cancelled":
-      default:
-        return "bg-red-500/10 font-light text-red-700";
-    }
-  };
 
   return (
     <>
@@ -87,7 +76,7 @@ export default function WeekGrid({
                 <div className="px-4 py-3 text-xs opacity-60">{t}</div>
 
                 {days.map((d) => {
-                  const items = weekIndex.get(d)?.get(t) ?? [];
+                  const items = (weekIndex.get(d)?.get(t) ?? []).filter((a) => a.status !== "cancelled");
                   return (
                     <div key={`${d}-${t}`} className="px-2 py-2">
                       {items.length === 0 ? (
@@ -102,11 +91,9 @@ export default function WeekGrid({
                               className="w-full rounded-xl border border-black/10 bg-white p-2 text-left text-xs transition hover:bg-black/5"
                               title={`${a.client_name} • ${a.service?.name ?? "Serviço"}`}
                             >
-                              <div className="flex items-center justify-between gap-1">
-                                <div className="font-medium">{a.client_name}</div>
-                                <span className={cx("rounded-full px-1 py-0.5 text-[10px]", statusBadge(a.status))}>
-                                  {a.status === "active" ? "Agendado" : a.status === "completed" ? "Concluído" : "Cancelado"}
-                                </span>
+                              <div className="flex items-center justify-between gap-1 min-w-0">
+                                <div className="font-medium truncate">{a.client_name}</div>
+                                <div className={cx("w-2 h-2 rounded-full shrink-0", a.status === "active" ? "bg-emerald-500" : "bg-blue-500")} />
                               </div>
                               <div className="mt-0.5 opacity-70 font-light">
                                 {a.service?.name ?? "Serviço"} • {a.barber?.name ?? "A definir"}
