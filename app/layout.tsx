@@ -8,6 +8,13 @@ export const metadata = {
   description: "Agende seu corte de forma rápida e sem complicação.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
